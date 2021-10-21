@@ -1,0 +1,95 @@
+.container {
+  background-color: #e2e9fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login {
+  padding: 30px 30px;
+  background: #fff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 0 5px 2px #ccc;
+}
+.signup-heading {
+  font-size: 30px;
+  font-weight: bold;
+  color: #373941;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.email-label {
+  font-size: 16px;
+  color: #373941;
+  margin-bottom: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+.email-input {
+  display: block;
+  width: 100%;
+  padding: 25px;
+  font-size: 18px;
+  border-radius: 20px;
+  background-color: #f2f3f5;
+  outline: none;
+  border: 0;
+  margin-bottom: 30px;
+}
+.password-label {
+  font-size: 16px;
+  color: #373941;
+  margin-bottom: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+.password-input {
+  display: block;
+  width: 100%;
+  padding: 25px;
+  font-size: 18px;
+  border-radius: 20px;
+  background-color: #f2f3f5;
+  outline: none;
+  border: 0;
+  margin-bottom: 30px;
+}
+.signup-submit {
+  padding: 25px;
+  color: white;
+  font-size: 18px;
+  border: 0;
+  width: 100%;
+  outline: none;
+  display: block;
+  text-align: center;
+  border-radius: 20px;
+  background-color: rgba(130, 201, 30);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(130, 201, 30);
+}
+
+.error-div {
+  color: red;
+  font-size: 12px;
+  text-align: center;
+  animation: shake 0.5s linear;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2%);
+  }
+  50% {
+    transform: translateX(2%);
+  }
+  100% {
+    transform: translateX(00);
+  }
+}

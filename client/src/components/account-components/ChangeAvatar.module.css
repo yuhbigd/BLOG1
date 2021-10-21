@@ -1,0 +1,68 @@
+.container {
+  display: none;
+}
+
+.container.show {
+  display: block;
+}
+
+.dropzone {
+  border-radius: 20%;
+  border: 1px solid #ccc;
+  flex-grow: 1;
+  display: flex;
+}
+.editorCanvas {
+  flex-grow: 1 !important;
+  border-radius: 20%;
+  width: 200px !important;
+  height: 200px !important;
+}
+
+.button-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-around;
+}
+.rangeInput {
+  height: 7px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  background-image: linear-gradient(#ff4500, #ff4500);
+}
+
+.rangeInput::-webkit-slider-thumb {
+  cursor: ew-resize;
+}
+.button-div {
+  margin-top: 15px;
+}
+.button-div > button {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(130, 201, 30);
+  cursor: pointer;
+}
+.btn {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(130, 201, 30);
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.rotateBtn {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+.rotateBtn button {
+  padding: 5px;
+  font-size: 10px;
+}

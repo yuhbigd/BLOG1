@@ -1,0 +1,147 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em;
+}
+.logo > img {
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
+.nav .main-navigator {
+  list-style: none;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  gap: 2em;
+  margin-right: 1rem;
+  font-size: 1.3rem;
+}
+.nav .main-navigator .main-navigator--item {
+  display: table;
+  position: relative;
+  color: #3a3e4e;
+}
+
+.nav .main-navigator .main-navigator--item:hover .bottom-line {
+  animation: bottomLine 0.2s ease-in-out;
+  width: 100%;
+}
+.nav .main-navigator .main-navigator--item .bottom-line {
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  height: 3px;
+  background-color: #b7c6f7;
+}
+.nav .main-navigator .main-navigator--item a {
+  text-decoration: none;
+  width: 100%;
+  vertical-align: middle;
+  display: table-cell;
+  height: 100%;
+  text-align: center;
+}
+.signup {
+  background: #3a3e4e;
+  border-radius: 1em;
+  padding: 0.5em;
+  color: #fff;
+}
+.active + .bottom-line {
+  width: 100%;
+}
+a:active,
+a:focus {
+  box-shadow: none;
+}
+
+@keyframes bottomLine {
+  0% {
+    width: 0;
+  }
+  80% {
+    width: 110%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+.avatar:hover::before {
+  content: "";
+  position: absolute;
+  width: 95%;
+  height: 1em;
+  bottom: 0;
+  transform: translateY(100%);
+  border-radius: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .nav {
+    background: #3a3e4e9d;
+    backdrop-filter: blur(15px);
+    width: 50%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -50%;
+    transition: all 0.5s linear;
+  }
+  .nav .main-navigator {
+    margin-top: 2.5em;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav .main-navigator .main-navigator--item {
+    padding: 0.5em;
+  }
+  .nav .main-navigator .main-navigator--item a {
+    color: #fff;
+  }
+  .nav.open {
+    animation: showNavbar 0.5s linear;
+    right: 0;
+  }
+  .nav.hide {
+    animation: hideNavbar 0.5s linear;
+  }
+  .timesIcon {
+    position: absolute;
+    top: 0.25em;
+    left: 0.25em;
+    color: #3a3e4e;
+    font-size: 2rem;
+    cursor: pointer;
+    margin-right: 25px;
+  }
+  @keyframes showNavbar {
+    0% {
+      display: block;
+      right: -50%;
+    }
+    100% {
+      right: 0;
+    }
+  }
+  @keyframes hideNavbar {
+    0% {
+      right: 0;
+    }
+    100% {
+      right: -50%;
+      display: none;
+    }
+  }
+}
+
+.bar-icon {
+  color: #3a3e4e;
+  font-size: 2rem;
+  cursor: pointer;
+  margin-right: 25px;
+}
+.hideNav {
+  display: none;
+}
