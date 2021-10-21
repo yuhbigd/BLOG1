@@ -139,10 +139,7 @@ export default (props) => {
                     : {}
                 }
               >
-                <Avatar
-                  name={reduxContext.name}
-                  avatarLink={reduxContext.avatar}
-                ></Avatar>
+                <Avatar></Avatar>
                 {!isPageWide && (
                   <DropDownMenu
                     isPageWide={false}

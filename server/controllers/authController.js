@@ -45,7 +45,9 @@ login_get = async (req, res) => {
 
     res
       .status(200)
-      .json({ user: _.pick(user, ["_id", "name", "isAdmin", "avatar"]) });
+      .json({
+        user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
+      });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -68,7 +70,9 @@ signup_post = async (req, res) => {
     });
     res
       .status(201)
-      .json({ user: _.pick(user, ["_id", "name", "isAdmin", "avatar"]) });
+      .json({
+        user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
+      });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -89,7 +93,9 @@ login_post = async (req, res) => {
 
     res
       .status(200)
-      .json({ user: _.pick(user, ["_id", "name", "isAdmin", "avatar"]) });
+      .json({
+        user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
+      });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

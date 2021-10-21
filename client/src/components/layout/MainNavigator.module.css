@@ -2,6 +2,8 @@
   display: flex;
   justify-content: space-between;
   padding: 0.5em;
+  min-height: 70px;
+  z-index: var(--zHeader);
 }
 .logo > img {
   width: 3rem;
@@ -33,7 +35,7 @@
   bottom: 0;
   position: absolute;
   height: 3px;
-  background-color: #b7c6f7;
+  background-color: #404756;
 }
 .nav .main-navigator .main-navigator--item a {
   text-decoration: none;
@@ -133,6 +135,9 @@ a:focus {
       right: -50%;
       display: none;
     }
+  }
+  .nav .main-navigator .main-navigator--item .bottom-line {
+    background-color: #e2e9fc;
   }
 }
 

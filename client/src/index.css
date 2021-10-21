@@ -6,9 +6,11 @@
   padding: 0;
   margin: 0;
   font-family: "Roboto", sans-serif;
+  color: #2f4858;
 }
 :root {
-  --primary: #e2e9fc;
+  --primary: #efc4ad;
+  --zHeader: 5;
 }
 body {
   background-color: var(--primary);

@@ -1,10 +1,13 @@
+import { useSelector } from "react-redux";
 import classes from "./Avatar.module.css";
-const COLOR = ["#D1E8E4", "#6C4A4A", "#FF865E"];
+const COLOR = ["#c563fa", "#6cff5e", "#FF865E"];
 function Avatar(props) {
-  const avatarLink = props.avatarLink;
-  const name = props.name;
-
-  let nameWords = name
+  //getting name and link to avatar image
+  const reduxContext = useSelector((state) => {
+    return state.user;
+  });
+  const avatarLink = reduxContext.avatar;
+  let nameWords = reduxContext.name
     .split(" ")
     .map((word) => {
       return word.charAt(0);
@@ -13,8 +16,8 @@ function Avatar(props) {
       return word + char;
     }, "");
 
+  //generate bg color
   const bgColor = COLOR[nameWords.charAt(0).charCodeAt(0) % 3];
-  console.log(bgColor);
 
   return (
     <div
@@ -23,7 +26,7 @@ function Avatar(props) {
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
     >
-      {avatarLink == "" ? (
+      {reduxContext.avatar == "" ? (
         <p>{nameWords.toUpperCase()}</p>
       ) : (
         <img src={process.env.REACT_APP_BASE_URL + avatarLink}></img>

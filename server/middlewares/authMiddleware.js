@@ -15,7 +15,7 @@ const checkUser = async (req, res, next) => {
       } else {
         res.clearCookie("token");
         res.status(401).json({
-          error: "invalid token",
+          error: "invalid token", 
         });
       }
     } catch (err) {

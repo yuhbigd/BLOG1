@@ -1,8 +1,7 @@
 .container {
-  background-color: #e2e9fc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+  height: 100%;
 }
 .signup {
   padding: 30px 30px;

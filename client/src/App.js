@@ -13,6 +13,7 @@ import Login from "./pages/authPages/Login";
 import _ from "lodash";
 import Signup from "./pages/authPages/Signup";
 import Account from "./pages/Account";
+import MainContainter from "./components/layout/MainContainter";
 
 global._ = _;
 
@@ -50,7 +51,7 @@ function App() {
       {!isBusy && (
         <>
           <MainNavigator></MainNavigator>
-          <div className="Body">
+          <MainContainter>
             <Suspense fallback={<Spinner></Spinner>}>
               <Switch>
                 <Route path="/" exact>
@@ -71,17 +72,20 @@ function App() {
                   )}
                 </Route>
                 <Route path="/account">
-                  {/* {!_.isEmpty(reduxContext) ? (
-                    <Account></Account>
+                  {!_.isEmpty(reduxContext) ? (
+                    <Account
+                      reduxContext={reduxContext}
+                      changeUser={addUserHandler}
+                    ></Account>
                   ) : (
                     <Redirect to="/"></Redirect>
-                  )} */}
-                  <Account></Account>
+                  )}
                 </Route>
                 <Redirect to="/"></Redirect>
               </Switch>
             </Suspense>
-          </div>
+          </MainContainter>
+          <footer>"DUONG HUY - 🥓 🧑‍🚀"</footer>
         </>
       )}
     </div>
