@@ -10,7 +10,7 @@ export async function login(user) {
   });
 
   const data = await response.json();
-  if (!response.ok) {
+  if (!response.ok || data.error) {
     let error = new Error(data.error || "Could not log in.");
     Object.assign(error, { statusCode: response.status });
     throw error;
@@ -29,7 +29,7 @@ export async function signup(user) {
   });
 
   const data = await response.json();
-  if (!response.ok) {
+  if (!response.ok || data.error) {
     let error = new Error(data.error || "Could not sign up.");
     Object.assign(error, { statusCode: response.status });
     throw error;
@@ -44,7 +44,7 @@ export async function getUserFromToken() {
     credentials: "include",
   });
   const data = await response.json();
-  if (!response.ok) {
+  if (!response.ok || data.error) {
     let error = new Error(data.error || "You haven't logged in.");
     Object.assign(error, { statusCode: response.status });
     throw error;

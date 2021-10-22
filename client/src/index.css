@@ -6,12 +6,14 @@
   padding: 0;
   margin: 0;
   font-family: "Roboto", sans-serif;
-  color: #2f4858;
 }
 :root {
   --primary: #efc4ad;
   --zHeader: 5;
+  --zModal: 6;
+  --zSpinner: 50;
 }
 body {
   background-color: var(--primary);
+  color: #2f4858;
 }

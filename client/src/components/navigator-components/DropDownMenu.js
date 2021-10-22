@@ -3,13 +3,18 @@ import { MdOutlineSettings } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import classes from "./DropDownMenu.module.css";
 import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 function DropDownMenu(props) {
+  const history = useHistory();
   //send a logout request to server
   async function logOutHandle(event) {
     await fetch(`${process.env.REACT_APP_BASE_URL}/logout`, {
       credentials: "include", //enable set cookies
     });
     window.location.href = "/";
+  }
+  function settingHandle(event) {
+    history.push("/account");
   }
   if (!props.isPageWide) {
     const showDrop = props.showDrop;
@@ -20,7 +25,7 @@ function DropDownMenu(props) {
 
     return (
       <ul className={dropClass}>
-        <li className={classes["dropdown__item"]}>
+        <li className={classes["dropdown__item"]} onClick={settingHandle}>
           <MdOutlineSettings></MdOutlineSettings>
           <span className="dropdown__text">Setting</span>
         </li>
@@ -33,7 +38,7 @@ function DropDownMenu(props) {
   } else {
     return (
       <>
-        <li className={props.className}>
+        <li className={props.className} onClick={settingHandle}>
           <NavLink to="/account">Setting</NavLink>
           <MdOutlineSettings style={{ color: "#fff" }}></MdOutlineSettings>
           <div className={props.bottomLineClass}></div>

@@ -18,6 +18,7 @@ function httpReducer(state, action) {
   }
 
   if (action.type === "ERROR") {
+    console.log(action.errorMessage);
     return {
       data: null,
       error: action.errorMessage,
@@ -42,6 +43,7 @@ function useHttp(requestFunction, startWithPending = false) {
         const responseData = await requestFunction(requestData);
         dispatch({ type: "SUCCESS", responseData });
       } catch (error) {
+        console.log("dispatch");
         dispatch({
           type: "ERROR",
           errorMessage: {

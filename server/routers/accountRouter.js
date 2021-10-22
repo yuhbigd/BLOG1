@@ -4,7 +4,7 @@ const { checkUser } = require("../middlewares/authMiddleware");
 const multer = require("multer");
 const router = Router();
 const imageUpload = multer({
-  dest: "../public/uploads/images",
+  dest: "public/uploads/images", // co the co loi cho nay
   limits: {
     fieldNameSize: 300,
     fileSize: 1048576, // 10 Mb

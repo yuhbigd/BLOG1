@@ -23,7 +23,7 @@ async function password_put(req, res) {
     const password = req.body.data.password;
     const newPassword = req.body.data.newPassword;
     const checkUser = await User.login(email, password);
-    const user = await User.updateOne(
+    await User.updateOne(
       { _id: _id },
       {
         password: newPassword,
@@ -37,6 +37,8 @@ async function password_put(req, res) {
         context: "query",
       },
     );
+    res.clearCookie("refreshToken");
+    res.clearCookie("token");
     res.status(200).json({
       message: "Done",
     });
