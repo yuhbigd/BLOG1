@@ -1,10 +1,11 @@
 const { Router } = require("express");
-const accountController = require("../controllers/accountController");
+const posts = require("../controllers/postsController");
 const { checkUser } = require("../middlewares/authMiddleware");
+
 const multer = require("multer");
 const router = Router();
 const imageUpload = multer({
-  dest: "public/uploads/images", // co the co loi cho nay
+  dest: "public/uploads/posts/images", // co the co loi cho nay
   limits: {
     fieldNameSize: 300,
     fileSize: 5242880, // 5 Mb
@@ -17,12 +18,10 @@ const imageUpload = multer({
     callback(null, true);
   },
 });
-router.put("/", [checkUser], accountController.account_put);
-router.put(
-  "/avatar",
-  [checkUser, imageUpload.single("avatar")],
-  accountController.avatar_put,
+
+router.post(
+  "/images",
+  [checkUser, imageUpload.single("image")],
+  posts.image_post_put,
 );
-router.put("/password", [checkUser], accountController.password_put);
-router.get("/", [checkUser], accountController.account_get);
 module.exports = { router };

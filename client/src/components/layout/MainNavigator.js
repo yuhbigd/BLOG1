@@ -72,7 +72,7 @@ export default (props) => {
         <ul className={classes["main-navigator"]}>
           <li className={classes["main-navigator--item"]}>
             <NavLink
-              to="/images"
+              to="/posts"
               activeClassName={classes.active}
               onClick={(event) => {
                 if (isPageWide) {
@@ -124,6 +124,21 @@ export default (props) => {
                   bottomLineClass={classes["bottom-line"]}
                 ></DropDownMenu>
               )}
+              <li className={classes["main-navigator--item"]}>
+                <NavLink
+                  to="/create"
+                  activeClassName={classes.active}
+                  onClick={(event) => {
+                    // hide navigator in phone screen
+                    if (isPageWide) {
+                      setNavClassName(classes.nav + " " + classes.hide);
+                    }
+                  }}
+                >
+                  Create
+                </NavLink>
+                <div className={classes["bottom-line"]}></div>
+              </li>
               <li
                 className={
                   classes.avatar + " " + classes["main-navigator--item"]

@@ -3,6 +3,7 @@ const cookie_Parse = require("cookie-parser");
 const mongoose = require("mongoose");
 const authRouter = require("./routers/authRouter");
 const accountRouter = require("./routers/accountRouter");
+const postsRouter = require("./routers/postsRouter");
 const _ = require("lodash");
 const cors = require("cors");
 
@@ -36,6 +37,7 @@ app.use(cors(corsOptions));
 
 app.use("/", authRouter.router);
 app.use("/account", accountRouter.router);
+app.use("/posts", postsRouter.router);
 app.listen(3001, () => {
   console.log("server is listen on port 3001");
 });

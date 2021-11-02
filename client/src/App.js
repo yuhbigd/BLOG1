@@ -8,12 +8,13 @@ import Spinner from "./components/sub-components/Spinner";
 import MainNavigator from "./components/layout/MainNavigator";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Router, Switch } from "react-router";
 import Login from "./pages/authPages/Login";
 import _ from "lodash";
 import Signup from "./pages/authPages/Signup";
 import Account from "./pages/Account";
 import MainContainter from "./components/layout/MainContainter";
+import Post from "./pages/createPostPages/Post";
 
 global._ = _;
 
@@ -71,16 +72,22 @@ function App() {
                     <Redirect to="/"></Redirect>
                   )}
                 </Route>
-                <Route path="/account">
-                  {!_.isEmpty(reduxContext) ? (
-                    <Account
-                      reduxContext={reduxContext}
-                      changeUser={addUserHandler}
-                    ></Account>
-                  ) : (
+                {!_.isEmpty(reduxContext) ? (
+                  <Switch>
+                    <Route path="/account">
+                      <Account
+                        reduxContext={reduxContext}
+                        changeUser={addUserHandler}
+                      ></Account>
+                    </Route>
+                    <Route path="/create">
+                      <Post reduxContext={reduxContext}></Post>
+                    </Route>
                     <Redirect to="/"></Redirect>
-                  )}
-                </Route>
+                  </Switch>
+                ) : (
+                  <Redirect to="/"></Redirect>
+                )}
                 <Redirect to="/"></Redirect>
               </Switch>
             </Suspense>

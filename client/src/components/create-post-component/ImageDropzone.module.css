@@ -1,0 +1,12 @@
+.dropzone {
+  width: 100%;
+  min-height: 50px;
+  border: 1px dashed red;
+}
+.title-image {
+  width: 95%;
+  max-height: 500px;
+  display: block;
+  margin: 2em auto;
+  object-fit: cover;
+}

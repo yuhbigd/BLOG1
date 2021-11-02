@@ -54,8 +54,14 @@
 .active + .bottom-line {
   width: 100%;
 }
-a:active,
-a:focus {
+.nav a {
+  color: #3a3e4e;
+}
+.nav > ul > li:last-child > a {
+  color: #fff;
+}
+.nav a:active,
+.nav a:focus {
   box-shadow: none;
 }
 

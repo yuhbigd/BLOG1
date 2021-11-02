@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Modal from "../sub-components/Modal";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import classes from "./ChangeAvatar.module.css";
 import { useDropzone } from "react-dropzone";
@@ -45,11 +45,10 @@ function ChangeAvatar(props) {
     accept: "image/*",
     maxSize: 5242880,
     onDrop: handleDrop,
-    onDropRejected: fileRejectedHandle,
   });
 
   // function to handle file which is dropped into zone
-  function handleDrop(file) {
+  function handleDrop(file, fileRejections) {
     if (!_.isEmpty(file)) {
       let img = URL.createObjectURL(file[0]);
       setImage(img);
@@ -57,26 +56,25 @@ function ChangeAvatar(props) {
         setIsAvatarChangeShowed(classes.show);
       }
     }
-  }
-
-  //handle if file is an error
-  function fileRejectedHandle(event) {
-    let message = fileRejections[0]["errors"][0].code;
-    message = message.concat([" ", fileRejections[0]["errors"][0].message]);
-    setErrorState(
-      <Modal
-        clickHandle={() => {
-          setErrorState(null);
-        }}
-      >
-        <ErrorComponent
+    //handle if file is an error
+    else if (!!fileRejections) {
+      let message = fileRejections[0].errors[0].code;
+      message = message.concat([" ", fileRejections[0].errors[0].message]);
+      setErrorState(
+        <Modal
           clickHandle={() => {
             setErrorState(null);
           }}
-          message={message}
-        ></ErrorComponent>
-      </Modal>,
-    );
+        >
+          <ErrorComponent
+            clickHandle={() => {
+              setErrorState(null);
+            }}
+            message={message}
+          ></ErrorComponent>
+        </Modal>,
+      );
+    }
   }
 
   // declare preview function when button was clicked

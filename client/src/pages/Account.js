@@ -140,7 +140,6 @@ function Account(props) {
     }
   }
   useEffect(() => {
-    console.log(passError, passStatus, passData);
     if (passData !== null && passError === null) {
       const announcementModal = createAnnouncementModal(
         setAnnouncementState,

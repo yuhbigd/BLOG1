@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const sanitize = require("mongo-sanitize");
 require("dotenv").config();
 
 createToken = async function (user) {
@@ -43,11 +44,9 @@ login_get = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    res
-      .status(200)
-      .json({
-        user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
-      });
+    res.status(200).json({
+      user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -68,11 +67,9 @@ signup_post = async (req, res) => {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
-    res
-      .status(201)
-      .json({
-        user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
-      });
+    res.status(201).json({
+      user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -81,7 +78,9 @@ signup_post = async (req, res) => {
 // login controller
 login_post = async (req, res) => {
   try {
-    const { email, password } = req.body.user;
+    let { email, password } = req.body.user;
+    email = sanitize(email);
+    password = sanitize(password);  
     const user = await User.login(email, password);
 
     const { token, refreshToken } = await createToken(user);
@@ -91,11 +90,9 @@ login_post = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    res
-      .status(200)
-      .json({
-        user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
-      });
+    res.status(200).json({
+      user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
