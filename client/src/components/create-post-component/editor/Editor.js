@@ -2,16 +2,54 @@ import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlight from "@tiptap/extension-text-align";
 import "./Editor.css";
+import Underline from "@tiptap/extension-underline";
 import TextStyle from "@tiptap/extension-text-style";
 import FontColor from "./custom-font-color";
 import Link from "@tiptap/extension-link";
 import CustomMark from "./custom-mark";
 import Image from "./custom-image";
 import MenuBar from "./MenuBar";
-import { useRef } from "react";
-import { useDropArea } from "react-use";
+import { useEffect, useRef, useState } from "react";
+import { useDropArea, useBeforeUnload } from "react-use";
+import useHttp from "../../../custom-hooks/use-http";
+import { removeImagesRedundancy, sendImage } from "../../../api/editorApi";
+import Spinner from "../../sub-components/Spinner";
+import Modal from "../../sub-components/Modal";
+import ErrorComponent from "../../sub-components/ErrorComponent";
+import { useHistory, Prompt } from "react-router-dom";
+import FontSize from "./custom-font-size";
+const serverDomain = process.env.REACT_APP_BASE_URL;
+//get base64 from image
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 export default function Editor(props) {
-  
+  const history = useHistory();
+  const navRef = useRef(true);
+  const [showPrompt, setShowPrompt] = useState(false);
+  //function to send the image and get the image link back
+  const {
+    sendRequest: sendImageToServer,
+    status: sendImageStatus,
+    data: imageData,
+    error: sendImageError,
+  } = useHttp(sendImage);
+  const {
+    sendRequest: deleteRedundantImage,
+    status: deleteRedundantImageStatus,
+    data: deleteRedundantImageData,
+    error: deleteRedundantImageError,
+  } = useHttp(removeImagesRedundancy);
+  //state contain all image links gotten from the server
+  const allImageRef = useRef(new Set());
+  const saveImagesRefs = useRef(new Set());
+  //error state
+  const [errorState, setErrorState] = useState(null);
   const editor = useEditor({
     editorProps: {
       attributes: {
@@ -19,17 +57,9 @@ export default function Editor(props) {
       },
     },
     onUpdate({ editor }) {
-      const contentJson = editor.getJSON();
-      // const imageArray = contentJson.content
-      //   .filter((item) => {
-      //     if (item.type === "image") {
-      //       return true;
-      //     }
-      //   })
-      //   .map((item) => {
-      //     return item.attrs.src;
-      //   });
-      // console.log(imageArray);
+      if (!showPrompt) {
+        setShowPrompt(true);
+      }
     },
     extensions: [
       StarterKit.configure({
@@ -52,6 +82,7 @@ export default function Editor(props) {
       }),
       TextStyle,
       FontColor,
+      Underline,
       CustomMark,
       Image.configure({
         HTMLAttributes: {
@@ -61,33 +92,126 @@ export default function Editor(props) {
       Link.configure({
         openOnClick: false,
       }),
+      FontSize,
     ],
     autofocus: true,
     editable: true,
     injectCSS: false,
     spellcheck: false,
   });
-  const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
+
+  // beforeunload confirm
+  async function removeUnsavedImages() {
+    const saveImagesArray = Array.from(saveImagesRefs.current);
+    const redundantImages = Array.from(allImageRef.current).filter((image) => {
+      return !saveImagesArray.includes(image);
     });
+    if (redundantImages.length > 0) {
+      console.log(redundantImages);
+      await deleteRedundantImage({ images: redundantImages });
+    }
+  }
+  useEffect(() => {
+    const unListen = history.listen(() => {
+      if (navRef.current === true) {
+        if (history.location.pathname !== "/create") {
+          removeUnsavedImages();
+          navRef.current = false;
+        }
+      }
+    });
+    // This function will be invoked on component unmount and will clean up
+    // the event listener.
+    return unListen;
+  }, []);
+  useEffect(() => {
+    if (showPrompt) {
+      window.onbeforeunload = () => {
+        return "Unsaved change will be removed, are you sure?";
+      };
+      window.onunload = async function () {
+        removeUnsavedImages();
+        return true;
+      };
+    } else {
+      window.onunload = () => {};
+      window.onbeforeunload = function () {};
+    }
+    return () => {
+      window.addEventListener("beforeunload", () => {});
+      window.addEventListener("unload", async function () {});
+    };
+  }, [showPrompt]);
+  //handle image drop into editor
   const [bond, state] = useDropArea({
     onFiles: async (file) => {
       if (file[0].type.split("/")[0] === "image") {
-        let imageSrc = URL.createObjectURL(file[0]);
-        editor.chain().focus().setImage({ src: imageSrc }).run();
         try {
-          // const imageBase64 = await getBase64(file[0]);
-          // console.log(imageBase64);
+          const imageBase64 = await getBase64(file[0]);
+          sendImageToServer(imageBase64);
         } catch (error) {
           console.log(error);
         }
       }
     },
   });
+  useEffect(() => {
+    if (sendImageError != null) {
+      setErrorState(
+        <Modal
+          clickHandle={() => {
+            setErrorState(null);
+          }}
+        >
+          <ErrorComponent
+            clickHandle={() => {
+              setErrorState(null);
+            }}
+            message={`${sendImageError.message} - ${sendImageError.statusCode}`}
+          ></ErrorComponent>
+        </Modal>,
+      );
+    }
+    if (imageData != null && sendImageStatus == "completed") {
+      editor
+        .chain()
+        .focus()
+        .setImage({ src: serverDomain + imageData.link })
+        .run();
+      allImageRef.current.add(imageData.link);
+    }
+  }, [sendImageStatus, imageData, sendImageError]);
+  // check image in editor with all image then remove all redundant images and create saveImages / save
+  const savePost = async (event) => {
+    event.preventDefault();
+    // array of images gotten from server in editor
+    const imageArray = editor
+      .getJSON()
+      .content.filter((item) => {
+        if (item.type === "image") {
+          return true;
+        }
+      })
+      .map((item) => {
+        return item.attrs.src;
+      })
+      .filter((item) => {
+        return item.includes(process.env.REACT_APP_BASE_URL, 0);
+      })
+      .map((item) => {
+        return item.split(process.env.REACT_APP_BASE_URL)[1];
+      });
+    const redundantImages = Array.from(allImageRef.current).filter((image) => {
+      return !imageArray.includes(image);
+    });
+    setShowPrompt(false);
+    if (redundantImages.length > 0) {
+      allImageRef.current = new Set(imageArray);
+      saveImagesRefs.current = new Set(imageArray);
+      await deleteRedundantImage({ images: redundantImages });
+    }
+  };
+  // check image in saveImages with all image and remove all redundant images / out
   return (
     <div className="sss">
       {/* BubbleMenu for image */}
@@ -129,7 +253,6 @@ export default function Editor(props) {
             onClick={(event) => {
               event.preventDefault();
               editor.chain().focus().setImage({ size: "small" }).run();
-              console.log(editor.isActive("image", { size: "small" }));
             }}
             className={
               editor.isActive("image", { size: "small" })
@@ -141,8 +264,24 @@ export default function Editor(props) {
           </button>
         </BubbleMenu>
       )}
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} {...bond} />
+      <div className="editor-container">
+        <MenuBar editor={editor} sendImageRequest={sendImageToServer} />
+        <div className="editor-container--subcontainer">
+          <EditorContent editor={editor} {...bond} />
+        </div>
+      </div>
+      {sendImageStatus === "pending" && <Spinner></Spinner>}
+      {errorState}
+      <button onClick={savePost}>save</button>
+      <Prompt
+        when={showPrompt}
+        message={(location, action) => {
+          if (location.pathname.startsWith("/create")) {
+            return false;
+          }
+          return `Everything unsaved will be removed, Are you sure to navigate away?`;
+        }}
+      ></Prompt>
     </div>
   );
 }

@@ -156,7 +156,7 @@ function ChangeAvatar(props) {
             clickHandle={() => {
               setErrorState(null);
             }}
-            message={`${fetchError.error} - ${fetchError.status}`}
+            message={`${fetchError.message} - ${fetchError.statusCode}`}
           ></ErrorComponent>
         </Modal>,
       );

@@ -29,16 +29,30 @@ async function image_post_put(req, res) {
 
     fs.writeFileSync(filepath, imageBuffer.data);
 
-    // if (req.user.avatar !== "") {
-    //   fs.unlinkSync(`public${req.user.avatar}`);
-    // }
-
     res.json({
       link: `/uploads/posts/images/${fileName}.png`,
       message: "done",
     });
   } catch (error) {
+    if (req.errors) {
+      res.status(400).json({ error: req.errors });
+      return;
+    }
     res.status(400).json({ error: error.message });
   }
 }
-module.exports = { image_post_put };
+async function images_post_delete(req, res) {
+  try {
+    const imageArray = req.body.data.images;
+    if (imageArray.length > 0) {
+      for (const image of imageArray) {
+        fs.unlinkSync(`public${image}`);
+      }
+    }
+  } catch (error) {
+    res.status(400).json({
+      error: error.message || "something goes wrong",
+    });
+  }
+}
+module.exports = { image_post_put, images_post_delete };

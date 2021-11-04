@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 import "@tiptap/extension-text-style";
-const CustomMark = Extension.create({
-  name: "mark",
+const FontSize = Extension.create({
+  name: "fontSize",
 
   addOptions() {
     return {
@@ -14,17 +14,17 @@ const CustomMark = Extension.create({
       {
         types: this.options.types,
         attributes: {
-          backgroundColor: {
+          fontSize: {
             default: null,
             parseHTML: (element) =>
-              element.style.backgroundColor.replace(/['"]+/g, ""),
+              element.style.fontSize.replace(/['"]+/g, ""),
             renderHTML: (attributes) => {
-              if (!attributes.backgroundColor) {
+              if (!attributes.fontSize) {
                 return {};
               }
 
               return {
-                style: `background-color: ${attributes.backgroundColor}; padding: 2px 0`,
+                style: `font-size: ${attributes.fontSize}`,
               };
             },
           },
@@ -35,20 +35,20 @@ const CustomMark = Extension.create({
 
   addCommands() {
     return {
-      setNote:
-        (backgroundColor) =>
+      setFontSize:
+        (fontSize) =>
         ({ chain }) => {
-          return chain().setMark("textStyle", { backgroundColor }).run();
+          return chain().setMark("textStyle", { fontSize }).run();
         },
-      unsetNote:
+      unsetFontSize:
         () =>
         ({ chain }) => {
           return chain()
-            .setMark("textStyle", { backgroundColor: null })
+            .setMark("textStyle", { fontSize: null })
             .removeEmptyTextStyle()
             .run();
         },
     };
   },
 });
-export default CustomMark;
+export default FontSize;

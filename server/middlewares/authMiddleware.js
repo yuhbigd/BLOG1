@@ -15,7 +15,7 @@ const checkUser = async (req, res, next) => {
       } else {
         res.clearCookie("token");
         res.status(401).json({
-          error: "invalid token", 
+          error: "invalid token",
         });
       }
     } catch (err) {
@@ -30,11 +30,11 @@ const checkUser = async (req, res, next) => {
       if (newToken.token && newToken.refreshToken) {
         res.cookie("token", newToken.token, {
           httpOnly: true,
-          maxAge: 1000 * 60,
+          maxAge: 1000 * 60 * 10,
         });
         res.cookie("refreshToken", newToken.refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 7,
+          maxAge: 1000 * 60 * 60 * 24 * 3,
         });
         req.user = newToken.user;
         next();

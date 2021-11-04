@@ -44,6 +44,7 @@ function Login(props) {
 
   useEffect(() => {
     if (fetchError != null) {
+      console.log(fetchError);
       setError(fetchError.error || fetchError.message);
     }
     if (data != null && status == "completed") {

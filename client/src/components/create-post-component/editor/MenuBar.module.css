@@ -1,0 +1,24 @@
+.menu-container {
+  position: sticky;
+  top: 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  width: 100%;
+  border: 2px solid #b7c2d5;
+  border-radius: 0.75rem 0.75rem 0 0;
+  box-shadow: #fff 0px -5px 0px 5px;
+  z-index: var(--zHeader);
+}
+.menu-container > button {
+  outline: none;
+  border: none;
+  color: #565d63;
+  background-color: transparent;
+}
+.menu-container > button :hover {
+  background-color: #b7c2d5;
+  color: #304fd0;
+}
+.menu-container > .is-editor-active {
+  color: #304fd0;
+}

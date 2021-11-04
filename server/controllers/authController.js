@@ -10,7 +10,7 @@ createToken = async function (user) {
     },
     process.env.SECRET_KEY,
     {
-      expiresIn: "1m",
+      expiresIn: 1000 * 60 * 10,
     },
   );
   const refreshToken = await jwt.sign(
@@ -19,7 +19,7 @@ createToken = async function (user) {
     },
     process.env.SECRET_REFRESH_KEY + user.password,
     {
-      expiresIn: "1h",
+      expiresIn: 1000 * 60 * 60 * 24 * 3,
     },
   );
   return { token, refreshToken };
@@ -80,7 +80,7 @@ login_post = async (req, res) => {
   try {
     let { email, password } = req.body.user;
     email = sanitize(email);
-    password = sanitize(password);  
+    password = sanitize(password);
     const user = await User.login(email, password);
 
     const { token, refreshToken } = await createToken(user);

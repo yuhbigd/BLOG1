@@ -6,7 +6,7 @@ const accountRouter = require("./routers/accountRouter");
 const postsRouter = require("./routers/postsRouter");
 const _ = require("lodash");
 const cors = require("cors");
-
+const { checkUser } = require("./middlewares/authMiddleware");
 global._ = _;
 
 require("dotenv").config();
@@ -37,7 +37,7 @@ app.use(cors(corsOptions));
 
 app.use("/", authRouter.router);
 app.use("/account", accountRouter.router);
-app.use("/posts", postsRouter.router);
+app.use("/posts", [checkUser], postsRouter.router);
 app.listen(3001, () => {
   console.log("server is listen on port 3001");
 });

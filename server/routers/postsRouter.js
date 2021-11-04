@@ -6,10 +6,7 @@ const multer = require("multer");
 const router = Router();
 const imageUpload = multer({
   dest: "public/uploads/posts/images", // co the co loi cho nay
-  limits: {
-    fieldNameSize: 300,
-    fileSize: 5242880, // 5 Mb
-  },
+  limits: { fieldSize: 5 * 1024 * 1024 }, // 5 mb
   fileFilter: function (req, file, callback) {
     var ext = path.extname(file.originalname);
     if (ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
@@ -18,10 +15,19 @@ const imageUpload = multer({
     callback(null, true);
   },
 });
+function uploadFile(req, res, next) {
+  const upload = imageUpload.single("image");
 
-router.post(
-  "/images",
-  [checkUser, imageUpload.single("image")],
-  posts.image_post_put,
-);
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      req.errors = err.message;
+    } else if (err) {
+      req.errors = err.message;
+    }
+    // Everything went fine.
+    next();
+  });
+}
+router.post("/images", [uploadFile], posts.image_post_put);
+router.delete("/images", posts.images_post_delete);
 module.exports = { router };

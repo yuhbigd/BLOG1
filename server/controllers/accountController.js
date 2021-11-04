@@ -103,6 +103,10 @@ async function avatar_put(req, res) {
       message: "done",
     });
   } catch (error) {
+    if (req.errors) {
+      res.status(404).json({ error: req.errors });
+      return;
+    }
     res.status(404).json({ error: error.message });
   }
 }

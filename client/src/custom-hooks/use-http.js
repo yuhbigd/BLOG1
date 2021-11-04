@@ -18,7 +18,6 @@ function httpReducer(state, action) {
   }
 
   if (action.type === "ERROR") {
-    console.log(action.errorMessage);
     return {
       data: null,
       error: action.errorMessage,

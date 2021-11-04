@@ -79,12 +79,14 @@ a:hover {
   margin-top: 0.75em;
 }
 .my-editor {
+  display: block;
+  position: relative;
   padding: 1em;
-  border-radius: 5px;
-  border: 1px solid red;
-  width: 91vw;
+  width: 90vw;
 }
-
+.my-editor:focus {
+  outline: none;
+}
 .ProseMirror ul,
 .ProseMirror ol {
   padding: 0 1rem;
@@ -135,6 +137,14 @@ button.is-editor-active {
 }
 @media only screen and (max-width: 600px) {
   .my-editor {
-    width: 80vw;
+    width: 82vw;
   }
+}
+.editor-container {
+  width: 100%;
+}
+.editor-container--subcontainer {
+  border: 2px solid #b7c2d5;
+  border-top: 0px;
+  border-radius: 0 0 0.75rem 0.75rem;
 }
