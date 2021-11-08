@@ -1,39 +1,39 @@
 const mongoose = require("mongoose");
-const { isEmail } = require("validator");
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    require: [true, "please enter an email"],
-    unique: [true, "this is email was chosen by another person"],
-    validate: [isEmail, "It's not an email"],
-  },
-  password: {
-    type: String,
-    require: [true, "please enter an password"],
-    minlength: 6,
-  },
-  name: {
-    type: String,
-    require: [true, "please enter a name"],
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
-  resetKey: {
-    type: String,
-    default: "",
-  },
-  avatar: {
-    type: String,
-    default: "",
-  },
-});
 
-const Post = mongoose.model("posts", userSchema);
+const postSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    require: [true, "Title can not be emptied"],
+  },
+  createAt: {
+    type: Date,
+    default: "",
+    index: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    require: [true],
+  },
+  contentHtml: {
+    type: String,
+    require: [true, "Content can not be emptied"],
+  },
+  contentJson: {
+    type: Object,
+    require: [true, "Content can not be emptied"],
+  },
+  slugUrl: {
+    type: String,
+    require: [true],
+    unique: true,
+    index: true,
+  },
+  totalViews: { type: Number, default: 0, index: true },
+  dayViews: { type: Number, default: 0, index: true },
+  monthViews: { type: Number, default: 0, index: true },
+  yearViews: { type: Number, default: 0, index: true },
+  comments: { type: Array, default: [] },
+});
+const Post = mongoose.model("posts", postSchema);
 
 module.exports = Post;

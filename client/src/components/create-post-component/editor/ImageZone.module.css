@@ -1,6 +1,28 @@
 .dropzone {
   padding: 2em;
   border: 3px dashed blanchedalmond;
-  width: 50%;
+  width: 160px;
+  height: fit-content;
   background-color: rgb(228, 188, 188);
+}
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  transform: translate(-40%, 5%);
+}
+.button {
+  outline: none;
+  border: none;
+  color: #565d63;
+  font-size: 0.75rem;
+  padding: 5px;
+  margin-left: 5px;
+  background-color: #ccc;
+}
+.button:hover {
+  background-color: #b7c2d5;
+  color: #304fd0;
 }

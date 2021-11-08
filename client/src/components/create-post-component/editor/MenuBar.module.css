@@ -1,24 +1,25 @@
 .menu-container {
-  position: sticky;
-  top: 0;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  width: 100%;
-  border: 2px solid #b7c2d5;
-  border-radius: 0.75rem 0.75rem 0 0;
-  box-shadow: #fff 0px -5px 0px 5px;
-  z-index: var(--zHeader);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
-.menu-container > button {
+.menu-container > button,
+.menu-container > span > button {
   outline: none;
   border: none;
   color: #565d63;
+  font-size: 1rem;
+  padding: 5px;
   background-color: transparent;
 }
-.menu-container > button :hover {
+.menu-container > button:hover,
+.menu-container > span > button:hover {
   background-color: #b7c2d5;
   color: #304fd0;
 }
 .menu-container > .is-editor-active {
+  background-color: #b7c2d5;
   color: #304fd0;
 }

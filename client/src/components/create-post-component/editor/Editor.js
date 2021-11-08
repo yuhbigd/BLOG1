@@ -8,7 +8,7 @@ import FontColor from "./custom-font-color";
 import Link from "@tiptap/extension-link";
 import CustomMark from "./custom-mark";
 import Image from "./custom-image";
-import MenuBar from "./MenuBar";
+import Menu from "./Menu";
 import { useEffect, useRef, useState } from "react";
 import { useDropArea, useBeforeUnload } from "react-use";
 import useHttp from "../../../custom-hooks/use-http";
@@ -18,6 +18,8 @@ import Modal from "../../sub-components/Modal";
 import ErrorComponent from "../../sub-components/ErrorComponent";
 import { useHistory, Prompt } from "react-router-dom";
 import FontSize from "./custom-font-size";
+import { FaUnlink } from "react-icons/fa";
+import ThumbnailImageDropzone from "./ThumbnailImageDropzone";
 const serverDomain = process.env.REACT_APP_BASE_URL;
 //get base64 from image
 const getBase64 = (file) =>
@@ -31,6 +33,7 @@ const getBase64 = (file) =>
 export default function Editor(props) {
   const history = useHistory();
   const navRef = useRef(true);
+  const thumbnailRef = useRef("");
   const [showPrompt, setShowPrompt] = useState(false);
   //function to send the image and get the image link back
   const {
@@ -107,7 +110,6 @@ export default function Editor(props) {
       return !saveImagesArray.includes(image);
     });
     if (redundantImages.length > 0) {
-      console.log(redundantImages);
       await deleteRedundantImage({ images: redundantImages });
     }
   }
@@ -127,11 +129,11 @@ export default function Editor(props) {
   useEffect(() => {
     if (showPrompt) {
       window.onbeforeunload = () => {
+        console.log("ASd");
         return "Unsaved change will be removed, are you sure?";
       };
       window.onunload = async function () {
-        removeUnsavedImages();
-        return true;
+        await removeUnsavedImages();
       };
     } else {
       window.onunload = () => {};
@@ -139,7 +141,7 @@ export default function Editor(props) {
     }
     return () => {
       window.addEventListener("beforeunload", () => {});
-      window.addEventListener("unload", async function () {});
+      window.addEventListener("unload", function () {});
     };
   }, [showPrompt]);
   //handle image drop into editor
@@ -185,7 +187,7 @@ export default function Editor(props) {
   const savePost = async (event) => {
     event.preventDefault();
     // array of images gotten from server in editor
-    const imageArray = editor
+    let imageArray = editor
       .getJSON()
       .content.filter((item) => {
         if (item.type === "image") {
@@ -197,75 +199,109 @@ export default function Editor(props) {
       })
       .filter((item) => {
         return item.includes(process.env.REACT_APP_BASE_URL, 0);
-      })
-      .map((item) => {
-        return item.split(process.env.REACT_APP_BASE_URL)[1];
       });
+    if (thumbnailRef.current !== "") {
+      imageArray.push(thumbnailRef.current);
+    }
+    imageArray = imageArray.map((item) => {
+      return item.split(process.env.REACT_APP_BASE_URL)[1];
+    });
     const redundantImages = Array.from(allImageRef.current).filter((image) => {
       return !imageArray.includes(image);
     });
     setShowPrompt(false);
+    allImageRef.current = new Set(imageArray);
+    saveImagesRefs.current = new Set(imageArray);
     if (redundantImages.length > 0) {
-      allImageRef.current = new Set(imageArray);
-      saveImagesRefs.current = new Set(imageArray);
       await deleteRedundantImage({ images: redundantImages });
     }
   };
   // check image in saveImages with all image and remove all redundant images / out
   return (
-    <div className="sss">
+    <div>
+      <ThumbnailImageDropzone
+        allImageRef={allImageRef}
+        thumbnailRef={thumbnailRef}
+        setShowPrompt={() => {
+          setShowPrompt(true);
+        }}
+      ></ThumbnailImageDropzone>
       {/* BubbleMenu for image */}
       {editor && (
-        <BubbleMenu
-          editor={editor}
-          pluginKey="menu"
-          shouldShow={({ editor, view, state, oldState, from, to }) => {
-            return editor.isActive("image");
-          }}
-        >
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              editor.chain().focus().setImage({ size: "large" }).run();
+        <>
+          <BubbleMenu
+            editor={editor}
+            pluginKey="menu"
+            shouldShow={({ editor, view, state, oldState, from, to }) => {
+              return editor.isActive("image");
             }}
-            className={
-              editor.isActive("image", { size: "large" })
-                ? "is-editor-active"
-                : ""
-            }
+            className={"bubble-menu"}
           >
-            large
-          </button>
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              editor.chain().focus().setImage({ size: "medium" }).run();
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                editor.chain().focus().setImage({ size: "large" }).run();
+              }}
+              className={
+                editor.isActive("image", { size: "large" })
+                  ? "is-editor-active"
+                  : ""
+              }
+            >
+              large
+            </button>
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                editor.chain().focus().setImage({ size: "medium" }).run();
+              }}
+              className={
+                editor.isActive("image", { size: "medium" })
+                  ? "is-editor-active"
+                  : ""
+              }
+            >
+              medium
+            </button>
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                editor.chain().focus().setImage({ size: "small" }).run();
+              }}
+              className={
+                editor.isActive("image", { size: "small" })
+                  ? "is-editor-active"
+                  : ""
+              }
+            >
+              small
+            </button>
+          </BubbleMenu>
+          <BubbleMenu
+            className={"bubble-menu"}
+            editor={editor}
+            pluginKey="link"
+            shouldShow={({ editor, view, state, oldState, from, to }) => {
+              return editor.isActive("link");
             }}
-            className={
-              editor.isActive("image", { size: "medium" })
-                ? "is-editor-active"
-                : ""
-            }
           >
-            medium
-          </button>
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              editor.chain().focus().setImage({ size: "small" }).run();
-            }}
-            className={
-              editor.isActive("image", { size: "small" })
-                ? "is-editor-active"
-                : ""
-            }
-          >
-            small
-          </button>
-        </BubbleMenu>
+            <button
+              onClick={() => {
+                editor
+                  .chain()
+                  .focus()
+                  .extendMarkRange("link")
+                  .unsetLink()
+                  .run();
+              }}
+            >
+              <FaUnlink />
+            </button>
+          </BubbleMenu>
+        </>
       )}
       <div className="editor-container">
-        <MenuBar editor={editor} sendImageRequest={sendImageToServer} />
+        <Menu editor={editor} sendImageRequest={sendImageToServer} />
         <div className="editor-container--subcontainer">
           <EditorContent editor={editor} {...bond} />
         </div>

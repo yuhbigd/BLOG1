@@ -74,7 +74,7 @@ function ImageZone(props) {
     props.onClick();
   };
   return (
-    <section className="container" style={{ position: "absolute" }}>
+    <section className={classes["container"]}>
       <div>
         <input
           type="text"
@@ -83,20 +83,21 @@ function ImageZone(props) {
           ref={imageInput}
           placeholder={"Get image from URL"}
         />
-        <button onClick={handleSaveClick}>Save</button>
       </div>
       <div {...getRootProps({ className: classes["dropzone"] })}>
         <input {...getInputProps()} />
-        {!preview && (
-          <p>
-            Or drag 'n' drop some local files here, or click to select local
-            files
-          </p>
-        )}
+        {!preview && <p>select local files</p>}
         {!!preview && preview.html}
       </div>
-      <button onClick={handleCancelClick}>save</button>
-      {errorState}
+      <span>
+        <button onClick={handleCancelClick} className={classes["button"]}>
+          cancel
+        </button>
+        <button onClick={handleSaveClick} className={classes["button"]}>
+          Save
+        </button>
+        {errorState}
+      </span>
     </section>
   );
 }

@@ -1,0 +1,126 @@
+@media only screen and (min-width: 600px) {
+  .list {
+    position: absolute;
+    bottom: -25%;
+    left: -25%;
+    list-style: none;
+    transform: translate(0, 100%);
+    font-size: 1rem;
+    width: 160%;
+    border-radius: 1rem 1rem 1rem 1rem;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
+    opacity: 0;
+  }
+
+  .dropdown__item {
+    padding: 1rem;
+    background-color: #fcfcfd;
+    cursor: pointer;
+    transition: all 0.2s linear;
+  }
+  .dropdown__item:hover {
+    background-color: #dfe0df;
+  }
+  .dropdown__item:first-child {
+    border-radius: 1rem 1rem 0 0;
+
+    position: relative;
+  }
+  .dropdown__item:first-child::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    border-right: 0.75rem solid transparent;
+    border-left: 0.75rem solid transparent;
+    border-bottom: 0.75rem solid #fcfcfd;
+    transition: all 0.2s linear;
+  }
+  .dropdown__item:first-child:hover::before {
+    border-bottom-color: #dfe0df;
+  }
+  .dropdown__item:last-child {
+    border-radius: 0rem 0rem 1rem 1rem;
+  }
+
+  .list::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    transform: translateY(-100%);
+  }
+  .MyClassEnter {
+    opacity: 1;
+    transform: translate(0, 100%) scale(0);
+  }
+  .MyClassEnterActive {
+    opacity: 1;
+    transform: translate(0, 100%) scale(1);
+    transition: all 200ms 100ms ease-in-out;
+  }
+  .MyClassEnterDone {
+    opacity: 1;
+    transform: translate(0, 100%) scale(1);
+    transition: all 200ms 100ms linear;
+  }
+
+  .MyClassExitActive {
+    opacity: 0;
+    transform: translate(0, 100%) scale(0);
+    transition: all 200ms ease-in-out;
+  }
+  .MyClassExit {
+    opacity: 0;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .list {
+    width: 100%;
+    list-style: none;
+    margin-top: -2em;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+    display: none;
+  }
+  .show {
+    display: block;
+  }
+  .dropdown__item {
+    padding: 1rem;
+    background-color: #e2e9fc;
+    cursor: pointer;
+    transition: all 0.2s linear;
+  }
+  .dropdown__item:hover {
+    background-color: #afb6c8;
+  }
+  .MyClassEnter {
+    height: 0;
+    min-height: 0;
+  }
+  .MyClassEnterActive {
+    height: 171px;
+    min-height: 171px;
+    transition: all 200ms 100ms ease-in-out;
+  }
+  .MyClassEnterDone {
+    height: 171px;
+    min-height: 171px;
+    transition: all 200ms 100ms linear;
+  }
+
+  .MyClassExitActive {
+    height: 0px;
+    min-height: 0px;
+    transition: all 200ms ease-in-out;
+  }
+  .MyClassExit {
+    height: 0px;
+    min-height: 0px;
+  }
+}

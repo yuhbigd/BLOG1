@@ -1,0 +1,64 @@
+.menu-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.menu-container > button,
+.menu-container > span > button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: #565d63;
+  font-size: 1rem;
+  padding: 6px;
+  background-color: transparent;
+}
+.menu-container > button:hover,
+.menu-container > span:hover > button,
+.menu-container > .is-editor-active {
+  background-color: #b7c2d5;
+  color: #304fd0;
+}
+
+.select-menu > p {
+  outline: none;
+  border: none;
+  color: #565d63;
+  font-size: 1rem;
+  padding: 5px;
+  background-color: transparent;
+}
+.select-menu > p.is-editor-active,
+.select-menu > p:hover,
+.select-menu ul > li:hover,
+.select-menu ul > li.is-editor-active {
+  background-color: #b7c2d5;
+  color: #304fd0;
+}
+.select-menu ul {
+  list-style: none;
+  color: #565d63;
+  position: absolute;
+  border: 1px solid #b7c2d5;
+  border-radius: 5px;
+  margin-top: 2px;
+  transition: all 0.5s ease-in;
+  opacity: 0;
+  visibility: hidden;
+  background-color: rgb(168, 168, 168);
+  transform: translateX(-5%);
+}
+.select-menu ul > li {
+  font-size: 1rem;
+  padding: 5px;
+  border-bottom: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #b7c2d5;
+}
+.select-menu ul.show {
+  opacity: 1;
+  visibility: visible;
+}

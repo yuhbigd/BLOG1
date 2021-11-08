@@ -6,13 +6,13 @@ a:hover {
   cursor: pointer;
 }
 .my-custom-blockquote {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   width: 60%;
   margin: 50px auto;
   font-family: Open Sans;
   font-style: italic;
   color: #555555;
-  padding: 1.2em 30px 1.2em 75px;
+  padding: 1em 1em 1em 75px;
   border-left: 8px solid #78c0a8;
   line-height: 1.6;
   position: relative;
@@ -83,6 +83,7 @@ a:hover {
   position: relative;
   padding: 1em;
   width: 90vw;
+  min-height: 100px;
 }
 .my-editor:focus {
   outline: none;
@@ -147,4 +148,19 @@ button.is-editor-active {
   border: 2px solid #b7c2d5;
   border-top: 0px;
   border-radius: 0 0 0.75rem 0.75rem;
+}
+.bubble-menu {
+  z-index: 2 !important;
+}
+.bubble-menu > button {
+  outline: none;
+  border: none;
+  color: #565d63;
+  font-size: 1rem;
+  padding: 5px;
+  background-color: #ccc;
+}
+.bubble-menu > button:hover {
+  background-color: #b7c2d5;
+  color: #304fd0;
 }

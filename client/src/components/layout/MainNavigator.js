@@ -9,10 +9,27 @@ import { useSelector } from "react-redux";
 import _ from "lodash";
 import Avatar from "../navigator-components/Avatar";
 import DropDownMenu from "../navigator-components/DropDownMenu";
+import MpSubmenu from "../navigator-components/MpSubmenu";
 export default (props) => {
   const history = useHistory();
   const isPageWide = useMediaQuery("(max-width: 600px)");
   const [navClassName, setNavClassName] = useState(classes.nav);
+  const [MpSubMenu, setMpSubMenu] = useState(false);
+  function hideMpSubMenu() {
+    if (!isPageWide) {
+      setMpSubMenu(false);
+    }
+  }
+  function showMpSubMenu() {
+    if (!isPageWide) {
+      setMpSubMenu(true);
+    }
+  }
+  const hideNavInSmallScreen = (event) => {
+    if (isPageWide) {
+      setNavClassName(classes.nav + " " + classes.hide);
+    }
+  };
   const reduxContext = useSelector((state) => {
     return state.user;
   });
@@ -90,11 +107,7 @@ export default (props) => {
                 <NavLink
                   to="/login"
                   activeClassName={classes.active}
-                  onClick={(event) => {
-                    if (isPageWide) {
-                      setNavClassName(classes.nav + " " + classes.hide);
-                    }
-                  }}
+                  onClick={hideNavInSmallScreen}
                 >
                   Login
                 </NavLink>
@@ -104,11 +117,7 @@ export default (props) => {
                 <NavLink
                   to="/signup"
                   className={classes.signup}
-                  onClick={(event) => {
-                    if (isPageWide) {
-                      setNavClassName(classes.nav + " " + classes.hide);
-                    }
-                  }}
+                  onClick={hideNavInSmallScreen}
                 >
                   Signup
                 </NavLink>
@@ -117,28 +126,46 @@ export default (props) => {
           )}
           {!_.isEmpty(reduxContext) && (
             <>
+              <li
+                className={classes["main-navigator--item"]}
+                onMouseEnter={showMpSubMenu}
+                onMouseLeave={hideMpSubMenu}
+              >
+                <NavLink
+                  to="/create"
+                  activeClassName={classes.active}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setMpSubMenu(!MpSubMenu);
+                  }}
+                >
+                  My post
+                </NavLink>
+                <div className={classes["bottom-line"]}></div>
+                {!isPageWide && (
+                  <MpSubmenu
+                    isShow={MpSubMenu}
+                    isPageWide={isPageWide}
+                    onClick={hideNavInSmallScreen}
+                  ></MpSubmenu>
+                )}
+              </li>
+              {isPageWide && (
+                <MpSubmenu
+                  isShow={MpSubMenu}
+                  isPageWide={isPageWide}
+                  onClick={hideNavInSmallScreen}
+                ></MpSubmenu>
+              )}
+
               {isPageWide && (
                 <DropDownMenu
                   isPageWide={true}
                   className={classes["main-navigator--item"]}
                   bottomLineClass={classes["bottom-line"]}
+                  onClick={hideNavInSmallScreen}
                 ></DropDownMenu>
               )}
-              <li className={classes["main-navigator--item"]}>
-                <NavLink
-                  to="/create"
-                  activeClassName={classes.active}
-                  onClick={(event) => {
-                    // hide navigator in phone screen
-                    if (isPageWide) {
-                      setNavClassName(classes.nav + " " + classes.hide);
-                    }
-                  }}
-                >
-                  Create
-                </NavLink>
-                <div className={classes["bottom-line"]}></div>
-              </li>
               <li
                 className={
                   classes.avatar + " " + classes["main-navigator--item"]
@@ -159,6 +186,7 @@ export default (props) => {
                   <DropDownMenu
                     isPageWide={false}
                     showDrop={showDropDownMenu}
+                    onClick={hideNavInSmallScreen}
                   ></DropDownMenu>
                 )}
               </li>

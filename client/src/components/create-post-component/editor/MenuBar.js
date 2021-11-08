@@ -20,10 +20,8 @@ import {
 import { GoCode, GoDash } from "react-icons/go";
 import classes from "./MenuBar.module.css";
 function MenuBar(props) {
+  const [showLink, setShowLink] = useState(false);
   const [imageZone, setImageZone] = useState(false);
-  function showImageZone() {
-    setImageZone(true);
-  }
   function hideImageZone() {
     setImageZone(false);
   }
@@ -41,40 +39,8 @@ function MenuBar(props) {
   }
   return (
     <div className={classes["menu-container"]}>
-      <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive("bold") ? classes["is-editor-active"] : ""}
-      >
-        <FaBold />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? classes["is-editor-active"] : ""}
-      >
-        <FaItalic></FaItalic>
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={editor.isActive("strike") ? classes["is-editor-active"] : ""}
-      >
-        <FaStrikethrough></FaStrikethrough>
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        className={
-          editor.isActive("underline") ? classes["is-editor-active"] : ""
-        }
-      >
-        <FaUnderline></FaUnderline>
-      </button>
-      <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-        <FaRemoveFormat></FaRemoveFormat>
-      </button>
-      <button onClick={() => editor.chain().focus().clearNodes().run()}>
-        clear nodes
-      </button>
-      {/* { co le dung select paragraph,heading,...} */}
       <select
+        title={"Paragraph format"}
         value={(() => {
           if (editor.isActive("heading", { level: 1 })) {
             return "1";
@@ -111,10 +77,62 @@ function MenuBar(props) {
         <option value="3">Heading 3</option>
       </select>
       <button
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        className={editor.isActive("bold") ? classes["is-editor-active"] : ""}
+      >
+        <FaBold />
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        className={editor.isActive("italic") ? classes["is-editor-active"] : ""}
+      >
+        <FaItalic></FaItalic>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+        className={editor.isActive("strike") ? classes["is-editor-active"] : ""}
+      >
+        <FaStrikethrough></FaStrikethrough>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        className={
+          editor.isActive("underline") ? classes["is-editor-active"] : ""
+        }
+      >
+        <FaUnderline></FaUnderline>
+      </button>
+      <select
+        title={"Font size"}
+        value={
+          editor.getAttributes("textStyle").fontSize
+            ? editor.getAttributes("textStyle").fontSize.split("px")[0]
+            : "16"
+        }
+        name="fontSize"
+        id="fontSize"
+        onChange={(event) => {
+          editor
+            .chain()
+            .focus()
+            .setFontSize(event.target.value + "px")
+            .run();
+        }}
+      >
+        {fontSizeOption()}
+      </select>
+      <button
+        onClick={() => editor.chain().focus().unsetAllMarks().run()}
+        title={"Clear style"}
+      >
+        <FaRemoveFormat></FaRemoveFormat>
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={
           editor.isActive("bulletList") ? classes["is-editor-active"] : ""
         }
+        title={"Unordered list"}
       >
         <FaListUl></FaListUl>
       </button>
@@ -123,8 +141,44 @@ function MenuBar(props) {
         className={
           editor.isActive("orderedList") ? classes["is-editor-active"] : ""
         }
+        title={"Ordered list"}
       >
         <FaListOl></FaListOl>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().setTextAlign("left").run()}
+        className={
+          editor.isActive({ textAlign: "left" })
+            ? classes["is-editor-active"]
+            : ""
+        }
+        title={"Align left"}
+      >
+        <FaAlignLeft />
+      </button>
+      <button
+        onClick={() => editor.chain().focus().setTextAlign("right").run()}
+        className={
+          editor.isActive({ textAlign: "right" })
+            ? classes["is-editor-active"]
+            : ""
+        }
+        title={"Align Right"}
+      >
+        <FaAlignRight />
+      </button>
+      <button
+        onClick={() => {
+          editor.chain().focus().setTextAlign("center").run();
+        }}
+        className={
+          editor.isActive({ textAlign: "center" })
+            ? classes["is-editor-active"]
+            : ""
+        }
+        title={"Align center"}
+      >
+        <FaAlignCenter />
       </button>
       <button
         onClick={() => {
@@ -140,6 +194,7 @@ function MenuBar(props) {
         className={
           editor.isActive("codeBlock") ? classes["is-editor-active"] : ""
         }
+        title={"Code block"}
       >
         <GoCode></GoCode>
       </button>
@@ -153,48 +208,19 @@ function MenuBar(props) {
         className={
           editor.isActive("blockquote") ? classes["is-editor-active"] : ""
         }
+        title={"Quote block"}
       >
         <FaQuoteLeft />
       </button>
-      <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+      <button
+        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        title={"Horizontal rule"}
+      >
         <GoDash></GoDash>
       </button>
-      <button onClick={() => editor.chain().focus().setHardBreak().run()}>
-        hard break
-      </button>
+
       <button
-        onClick={() => editor.chain().focus().setTextAlign("left").run()}
-        className={
-          editor.isActive({ textAlign: "left" })
-            ? classes["is-editor-active"]
-            : ""
-        }
-      >
-        <FaAlignLeft />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().setTextAlign("right").run()}
-        className={
-          editor.isActive({ textAlign: "right" })
-            ? classes["is-editor-active"]
-            : ""
-        }
-      >
-        <FaAlignRight />
-      </button>
-      <button
-        onClick={() => {
-          editor.chain().focus().setTextAlign("center").run();
-        }}
-        className={
-          editor.isActive({ textAlign: "center" })
-            ? classes["is-editor-active"]
-            : ""
-        }
-      >
-        <FaAlignCenter />
-      </button>
-      <button
+        title={"Highlight"}
         onClick={() => {
           if (
             !editor.isActive("textStyle", {
@@ -217,6 +243,7 @@ function MenuBar(props) {
         <FaHighlighter />
       </button>
       <input
+        title={"Text color"}
         type="color"
         name="color"
         id="color"
@@ -226,79 +253,84 @@ function MenuBar(props) {
         style={{ width: "20px", height: "20px" }}
         value={editor.getAttributes("textStyle").color || "#000000"}
       />
+
+      <span>
+        <button
+          onClick={(event) => {
+            setImageZone(!imageZone);
+          }}
+          title={"Insert image"}
+        >
+          <FaImage />
+        </button>
+        {imageZone && (
+          <ImageZone
+            onClick={hideImageZone}
+            editor={editor}
+            sendImageRequest={props.sendImageRequest}
+          ></ImageZone>
+        )}
+      </span>
+
       <button
         onClick={() => {
-          editor.chain().focus().unsetColor().run();
+          setShowLink(!showLink);
         }}
-      >
-        unset Color
-      </button>
-      <button
-        onClick={(event) => {
-          showImageZone();
-          const url = null;
-          if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-          }
-        }}
-      >
-        <FaImage />
-      </button>
-      {imageZone && (
-        <ImageZone
-          onClick={hideImageZone}
-          editor={editor}
-          sendImageRequest={props.sendImageRequest}
-        ></ImageZone>
-      )}
-      <input type="text" name="href" id="href" />
-      <button
-        onClick={() => {
-          const previousUrl = editor.getAttributes("link").href;
-          const url = document.querySelector("#href").value;
-          if (url === previousUrl) {
-            return;
-          } else if (!url) {
-            editor.chain().focus().extendMarkRange("link").unsetLink().run();
-            return;
-          } else if (url) {
-            editor
-              .chain()
-              .focus()
-              .extendMarkRange("link")
-              .setLink({ href: url })
-              .run();
-            return;
-          }
-        }}
+        title={"Insert link"}
       >
         <FaLink />
+        {showLink && (
+          <span
+            style={{
+              position: "absolute",
+              bottom: "0",
+              transform: "translate(-50%,100%)",
+            }}
+          >
+            <label htmlFor="href">Link: </label>
+            <input
+              type="text"
+              name="href"
+              id="href"
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            />
+            <button
+              onClick={() => {
+                const previousUrl = editor.getAttributes("link").href;
+                const url = document.querySelector("#href").value;
+                if (url === previousUrl) {
+                } else if (!url) {
+                  editor
+                    .chain()
+                    .focus()
+                    .extendMarkRange("link")
+                    .unsetLink()
+                    .run();
+                } else if (url) {
+                  editor
+                    .chain()
+                    .focus()
+                    .extendMarkRange("link")
+                    .setLink({ href: url })
+                    .run();
+                }
+                setShowLink(false);
+              }}
+            >
+              OK
+            </button>
+          </span>
+        )}
       </button>
+
       <button
-        onClick={() => {
-          editor.chain().focus().extendMarkRange("link").unsetLink().run();
-        }}
+        onClick={() => editor.chain().focus().clearNodes().run()}
+        title={"Clear block format style"}
       >
-        <FaUnlink />
+        Clear
       </button>
-      <select
-        value={
-          editor.getAttributes("textStyle").fontSize
-            ? editor.getAttributes("textStyle").fontSize.split("px")[0]
-            : "16"
-        }
-        name="fontSize"
-        id="fontSize"
-        onChange={(event) => {
-          editor
-            .chain()
-            .focus()
-            .setFontSize(event.target.value + "px")
-            .run();
-        }}
-      >
-        {fontSizeOption()}
-      </select>
     </div>
   );
 }

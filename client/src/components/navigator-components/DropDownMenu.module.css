@@ -7,7 +7,6 @@
   left: 0;
   border-radius: 1rem 1rem 01rem 01rem;
   box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.2);
-  display: none;
 }
 .dropdown-list.show {
   display: block;
@@ -46,4 +45,29 @@
 }
 .dropdown__item:last-child {
   border-radius: 0rem 0rem 01rem 01rem;
+}
+.icon {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
+}
+.MyClassEnter {
+  transform: scale(0);
+}
+.MyClassEnterActive {
+  transform: scale(1);
+  transition: all 200ms 100ms ease-in-out;
+}
+.MyClassEnterDone {
+  transform: scale(1);
+  transition: all 200ms 100ms linear;
+}
+
+.MyClassExitActive {
+  transform: scale(0);
+  transition: all 200ms ease-in-out;
+}
+.MyClassExit {
+  transform: scale(0);
 }

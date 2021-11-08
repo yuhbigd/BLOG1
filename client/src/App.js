@@ -14,7 +14,7 @@ import _ from "lodash";
 import Signup from "./pages/authPages/Signup";
 import Account from "./pages/Account";
 import MainContainter from "./components/layout/MainContainter";
-import Post from "./pages/createPostPages/Post";
+import CreatePost from "./pages/createPostPages/CreatePost";
 
 global._ = _;
 
@@ -81,7 +81,7 @@ function App() {
                       ></Account>
                     </Route>
                     <Route path="/create">
-                      <Post reduxContext={reduxContext}></Post>
+                      <CreatePost reduxContext={reduxContext} />
                     </Route>
                     <Redirect to="/"></Redirect>
                   </Switch>

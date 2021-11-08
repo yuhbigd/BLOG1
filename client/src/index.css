@@ -9,6 +9,7 @@
 }
 :root {
   --primary: #efc4ad;
+  --zFloat : 4;
   --zHeader: 5;
   --zModal: 6;
   --zSpinner: 50;

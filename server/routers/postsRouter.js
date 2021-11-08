@@ -30,4 +30,5 @@ function uploadFile(req, res, next) {
 }
 router.post("/images", [uploadFile], posts.image_post_put);
 router.delete("/images", posts.images_post_delete);
+router.post("/", posts.article_post);
 module.exports = { router };
