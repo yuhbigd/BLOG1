@@ -9,7 +9,8 @@ import Link from "@tiptap/extension-link";
 import CustomMark from "./custom-mark";
 import Image from "./custom-image";
 import Menu from "./Menu";
-import { useEffect, useRef, useState } from "react";
+import React from "react";
+import { useEffect, useRef, useState, useImperativeHandle } from "react";
 import { useDropArea, useBeforeUnload } from "react-use";
 import useHttp from "../../../custom-hooks/use-http";
 import { removeImagesRedundancy, sendImage } from "../../../api/editorApi";
@@ -30,7 +31,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function Editor(props) {
+const Editor = React.forwardRef((props, ref) => {
   const history = useHistory();
   const navRef = useRef(true);
   const thumbnailRef = useRef("");
@@ -137,11 +138,12 @@ export default function Editor(props) {
       };
     } else {
       window.onunload = () => {};
-      window.onbeforeunload = function () {};
+      window.onbeforeunload = () => {};
     }
     return () => {
-      window.addEventListener("beforeunload", () => {});
-      window.addEventListener("unload", function () {});
+      console.log("Asds");
+      window.onunload = () => {};
+      window.onbeforeunload = () => {};
     };
   }, [showPrompt]);
   //handle image drop into editor
@@ -185,7 +187,6 @@ export default function Editor(props) {
   }, [sendImageStatus, imageData, sendImageError]);
   // check image in editor with all image then remove all redundant images and create saveImages / save
   const savePost = async (event) => {
-    event.preventDefault();
     // array of images gotten from server in editor
     let imageArray = editor
       .getJSON()
@@ -201,7 +202,9 @@ export default function Editor(props) {
         return item.includes(process.env.REACT_APP_BASE_URL, 0);
       });
     if (thumbnailRef.current !== "") {
-      imageArray.push(thumbnailRef.current);
+      if (thumbnailRef.current.includes(process.env.REACT_APP_BASE_URL, 0)) {
+        imageArray.push(thumbnailRef.current);
+      }
     }
     imageArray = imageArray.map((item) => {
       return item.split(process.env.REACT_APP_BASE_URL)[1];
@@ -216,7 +219,16 @@ export default function Editor(props) {
       await deleteRedundantImage({ images: redundantImages });
     }
   };
+
   // check image in saveImages with all image and remove all redundant images / out
+
+  //forward Ref
+  useImperativeHandle(ref, () => ({
+    getHTMLContent: () => editor.getHTML(),
+    getJSONContent: () => editor.getJSON(),
+    deleteRedundantImagesOnSave: savePost,
+    thumbnailImage: () => thumbnailRef.current,
+  }));
   return (
     <div>
       <ThumbnailImageDropzone
@@ -308,7 +320,7 @@ export default function Editor(props) {
       </div>
       {sendImageStatus === "pending" && <Spinner></Spinner>}
       {errorState}
-      <button onClick={savePost}>save</button>
+      <button onClick={savePost}>Save to draft</button>
       <Prompt
         when={showPrompt}
         message={(location, action) => {
@@ -320,4 +332,5 @@ export default function Editor(props) {
       ></Prompt>
     </div>
   );
-}
+});
+export default Editor;

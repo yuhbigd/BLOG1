@@ -1,18 +1,23 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
+  createAt: {
+    type: Date,
+    index: true,
+  },
   title: {
     type: String,
     require: [true, "Title can not be emptied"],
-  },
-  createAt: {
-    type: Date,
-    default: "",
     index: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     require: [true],
+    index: true,
+  },
+  thumbnailImage: {
+    type: String,
+    require: true,
   },
   contentHtml: {
     type: String,

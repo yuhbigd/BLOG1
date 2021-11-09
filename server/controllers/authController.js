@@ -71,6 +71,14 @@ signup_post = async (req, res) => {
       user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
     });
   } catch (error) {
+    if (error.code) {
+      if (error.code === 11000) {
+        res
+          .status(400)
+          .json({ error: "This email has been used by another person" });
+        return;
+      }
+    }
     res.status(400).json({ error: error.message });
   }
 };

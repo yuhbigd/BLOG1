@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     require: [true, "please enter an email"],
-    unique: [true, "this is email was chosen by another person"],
+    unique: [true, "this email was chosen by another person"],
     validate: [isEmail, "It's not an email"],
   },
   password: {

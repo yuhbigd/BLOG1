@@ -8,7 +8,7 @@ import useHttp from "../../../custom-hooks/use-http";
 import { sendImage } from "../../../api/editorApi";
 import Spinner from "../../sub-components/Spinner";
 const serverDomain = process.env.REACT_APP_BASE_URL;
-// toi nay phai sua de cho cai anh trong nay cung flow vs anh trong editor. roi them phan anh nay vao trong post schema
+
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -77,7 +77,6 @@ function ThumbnailImageDropzone(props) {
       );
     }
     if (imageData != null && sendImageStatus == "completed") {
-      
       setPreview({
         html: (
           <img
@@ -100,6 +99,7 @@ function ThumbnailImageDropzone(props) {
         onClick={() => {
           setPreview(null);
           if (showDrop === "From local") {
+            props.thumbnailRef.current = "";
             setShowDrop("From url");
           } else {
             props.thumbnailRef.current = "";
@@ -133,9 +133,10 @@ function ThumbnailImageDropzone(props) {
               ),
               src: imageInput.current.value,
             });
+            props.thumbnailRef.current = imageInput.current.value;
           }}
         >
-          Preview
+          Set image
         </button>
       )}
       {errorState}
