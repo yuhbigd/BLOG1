@@ -6,9 +6,11 @@ function CreatePost() {
   const titleRef = useRef();
   const editorRef = useRef();
   const [showDraftConfirm, setShowDraftConfirm] = useState(false);
+  // con phan public post chua lam :]
   return (
     <div className={classes.container}>
       <textarea
+        style={{ borderRadius: "5px" }}
         placeholder="Post title!"
         className={classes.title}
         rows="1"
@@ -22,14 +24,20 @@ function CreatePost() {
         }}
       ></textarea>
       <Editor ref={editorRef}></Editor>
-      <button
-        onClick={() => {
-          // editorRef.current.savePost();
-          setShowDraftConfirm(true);
-        }}
-      >
-        Save to drafts
-      </button>
+      <div className={classes["button-div"]}>
+        <button className={classes["public-button"]}>
+          Public this article
+        </button>
+        <button
+          className={classes["draft-button"]}
+          onClick={() => {
+            // editorRef.current.savePost();
+            setShowDraftConfirm(true);
+          }}
+        >
+          Save to drafts
+        </button>
+      </div>
       {showDraftConfirm === true && (
         <ConfirmDraft
           hideComponent={() => {
@@ -38,6 +46,10 @@ function CreatePost() {
           deleteRedundantImagesOnSave={
             editorRef.current.deleteRedundantImagesOnSave
           }
+          titleRef={titleRef}
+          thumbnailImage={editorRef.current.thumbnailImage}
+          HTMLContent={editorRef.current.getHTMLContent}
+          JSONContent={editorRef.current.getJSONContent}
         ></ConfirmDraft>
       )}
     </div>

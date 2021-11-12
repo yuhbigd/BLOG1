@@ -94,7 +94,7 @@ function MpSubmenu(props) {
           <li
             className={classes["dropdown__item"]}
             onClick={() => {
-              handleClick("/u/posts");
+              handleClick("/posts");
               props.onClick();
             }}
           >

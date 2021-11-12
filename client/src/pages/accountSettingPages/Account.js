@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { changeAccountInfo, changePassword } from "../api/modifyAccountApi";
-import ChangeAvatar from "../components/account-components/ChangeAvatar";
-import ChangePassword from "../components/account-components/ChangePassword";
-import Avatar from "../components/navigator-components/Avatar";
-import Announcement from "../components/sub-components/Announcement";
-import ErrorComponent from "../components/sub-components/ErrorComponent";
-import Modal from "../components/sub-components/Modal";
-import Spinner from "../components/sub-components/Spinner";
-import useHttp from "../custom-hooks/use-http";
+import { changeAccountInfo, changePassword } from "../../api/modifyAccountApi";
+import ChangeAvatar from "../../components/account-components/ChangeAvatar";
+import ChangePassword from "../../components/account-components/ChangePassword";
+import Avatar from "../../components/navigator-components/Avatar";
+import Announcement from "../../components/sub-components/Announcement";
+import ErrorComponent from "../../components/sub-components/ErrorComponent";
+import Modal from "../../components/sub-components/Modal";
+import Spinner from "../../components/sub-components/Spinner";
+import useHttp from "../../custom-hooks/use-http";
 import classes from "./Account.module.css";
 function errorMess(setErrorState, message) {
   return (

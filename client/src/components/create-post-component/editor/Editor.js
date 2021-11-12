@@ -21,7 +21,7 @@ import { useHistory, Prompt } from "react-router-dom";
 import FontSize from "./custom-font-size";
 import { FaUnlink } from "react-icons/fa";
 import ThumbnailImageDropzone from "./ThumbnailImageDropzone";
-const serverDomain = process.env.REACT_APP_BASE_URL;
+const storageDomain = process.env.REACT_APP_STORAGE_URL ;
 //get base64 from image
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -130,7 +130,6 @@ const Editor = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (showPrompt) {
       window.onbeforeunload = () => {
-        console.log("ASd");
         return "Unsaved change will be removed, are you sure?";
       };
       window.onunload = async function () {
@@ -141,7 +140,6 @@ const Editor = React.forwardRef((props, ref) => {
       window.onbeforeunload = () => {};
     }
     return () => {
-      console.log("Asds");
       window.onunload = () => {};
       window.onbeforeunload = () => {};
     };
@@ -180,7 +178,7 @@ const Editor = React.forwardRef((props, ref) => {
       editor
         .chain()
         .focus()
-        .setImage({ src: serverDomain + imageData.link })
+        .setImage({ src: storageDomain + imageData.link })
         .run();
       allImageRef.current.add(imageData.link);
     }
@@ -199,15 +197,15 @@ const Editor = React.forwardRef((props, ref) => {
         return item.attrs.src;
       })
       .filter((item) => {
-        return item.includes(process.env.REACT_APP_BASE_URL, 0);
+        return item.includes(storageDomain, 0);
       });
     if (thumbnailRef.current !== "") {
-      if (thumbnailRef.current.includes(process.env.REACT_APP_BASE_URL, 0)) {
+      if (thumbnailRef.current.includes(storageDomain, 0)) {
         imageArray.push(thumbnailRef.current);
       }
     }
     imageArray = imageArray.map((item) => {
-      return item.split(process.env.REACT_APP_BASE_URL)[1];
+      return item.split(storageDomain)[1];
     });
     const redundantImages = Array.from(allImageRef.current).filter((image) => {
       return !imageArray.includes(image);
@@ -230,7 +228,7 @@ const Editor = React.forwardRef((props, ref) => {
     thumbnailImage: () => thumbnailRef.current,
   }));
   return (
-    <div>
+    <div style={{ width: "100%", maxWidth: "100%" }}>
       <ThumbnailImageDropzone
         allImageRef={allImageRef}
         thumbnailRef={thumbnailRef}
@@ -320,7 +318,7 @@ const Editor = React.forwardRef((props, ref) => {
       </div>
       {sendImageStatus === "pending" && <Spinner></Spinner>}
       {errorState}
-      <button onClick={savePost}>Save to draft</button>
+      {/* <button onClick={savePost}>Save to draft</button> */}
       <Prompt
         when={showPrompt}
         message={(location, action) => {

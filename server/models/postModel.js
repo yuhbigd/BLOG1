@@ -7,29 +7,29 @@ const postSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    require: [true, "Title can not be emptied"],
+    required: [true, "Title can not be emptied"],
     index: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    require: [true],
+    required: [true],
     index: true,
   },
   thumbnailImage: {
     type: String,
-    require: true,
+    required: true,
   },
   contentHtml: {
     type: String,
-    require: [true, "Content can not be emptied"],
+    required: [true, "Content can not be emptied"],
   },
   contentJson: {
     type: Object,
-    require: [true, "Content can not be emptied"],
+    required: [true, "Content can not be emptied"],
   },
   slugUrl: {
     type: String,
-    require: [true],
+    required: [true],
     unique: true,
     index: true,
   },

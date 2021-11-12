@@ -7,7 +7,7 @@ import ErrorComponent from "../../sub-components/ErrorComponent";
 import useHttp from "../../../custom-hooks/use-http";
 import { sendImage } from "../../../api/editorApi";
 import Spinner from "../../sub-components/Spinner";
-const serverDomain = process.env.REACT_APP_BASE_URL;
+const storageDomain = process.env.REACT_APP_STORAGE_URL;
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -81,13 +81,13 @@ function ThumbnailImageDropzone(props) {
         html: (
           <img
             className={classes["title-image"]}
-            src={serverDomain + imageData.link}
+            src={storageDomain + imageData.link}
           ></img>
         ),
         src: imageData.link,
       });
       props.allImageRef.current.add(imageData.link);
-      props.thumbnailRef.current = serverDomain + imageData.link;
+      props.thumbnailRef.current = storageDomain + imageData.link;
       props.setShowPrompt();
     }
   }, [sendImageStatus, imageData, sendImageError]);
@@ -109,18 +109,6 @@ function ThumbnailImageDropzone(props) {
       >
         {showDrop}
       </button>
-      {showDrop === "From local" ? (
-        <div>
-          <input type="text" name="link" id="image" ref={imageInput} />
-        </div>
-      ) : (
-        <div {...getRootProps({ className: classes["dropzone"] })}>
-          <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
-          {!!preview && showDrop !== "From local" && preview.html}
-        </div>
-      )}
-      {!!preview && showDrop === "From local" && preview.html}
       {showDrop === "From local" && (
         <button
           onClick={(event) => {
@@ -136,9 +124,28 @@ function ThumbnailImageDropzone(props) {
             props.thumbnailRef.current = imageInput.current.value;
           }}
         >
-          Set image
+          Load image
         </button>
       )}
+      {showDrop === "From local" ? (
+        <div>
+          <input
+            type="text"
+            name="link"
+            id="image"
+            ref={imageInput}
+            className={classes["urlInput"]}
+            placeholder={"Image url"}
+          />
+        </div>
+      ) : (
+        <div {...getRootProps({ className: classes["dropzone"] })}>
+          <input {...getInputProps()} />
+          <p>Drag 'n' drop some files here, or click to select files</p>
+          {!!preview && showDrop !== "From local" && preview.html}
+        </div>
+      )}
+      {!!preview && showDrop === "From local" && preview.html}
       {errorState}
     </section>
   );

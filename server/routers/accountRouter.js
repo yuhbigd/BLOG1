@@ -27,8 +27,8 @@ function uploadFile(req, res, next) {
     next();
   });
 }
-router.put("/", [checkUser], accountController.account_put);
-router.put("/avatar", [checkUser, uploadFile], accountController.avatar_put);
-router.put("/password", [checkUser], accountController.password_put);
-router.get("/", [checkUser], accountController.account_get);
+router.put("/", accountController.account_put);
+router.put("/avatar", [uploadFile], accountController.avatar_put);
+router.put("/password", accountController.password_put);
+router.get("/", accountController.account_get);
 module.exports = { router };

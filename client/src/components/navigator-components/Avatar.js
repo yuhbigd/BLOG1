@@ -29,7 +29,7 @@ function Avatar(props) {
       {reduxContext.avatar == "" ? (
         <p>{nameWords.toUpperCase()}</p>
       ) : (
-        <img src={process.env.REACT_APP_BASE_URL + avatarLink}></img>
+        <img src={process.env.REACT_APP_STORAGE_URL + avatarLink}></img>
       )}
     </div>
   );

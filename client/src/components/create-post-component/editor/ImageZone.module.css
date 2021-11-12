@@ -5,6 +5,14 @@
   height: fit-content;
   background-color: rgb(228, 188, 188);
 }
+.dropzone > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
 .container {
   display: flex;
   align-items: center;

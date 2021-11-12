@@ -60,7 +60,7 @@ signup_post = async (req, res) => {
       email,
       password,
       name,
-    });
+    },);
     const { token, refreshToken } = await createToken(user);
     res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 });
     res.cookie("refreshToken", refreshToken, {

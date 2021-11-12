@@ -8,13 +8,14 @@ import Spinner from "./components/sub-components/Spinner";
 import MainNavigator from "./components/layout/MainNavigator";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { Redirect, Route, Router, Switch } from "react-router";
+import { Redirect, Route, Switch } from "react-router";
 import Login from "./pages/authPages/Login";
 import _ from "lodash";
 import Signup from "./pages/authPages/Signup";
-import Account from "./pages/Account";
+import Account from "./pages/accountSettingPages/Account";
 import MainContainter from "./components/layout/MainContainter";
 import CreatePost from "./pages/createPostPages/CreatePost";
+import DraftsPage from "./pages/draftsPages/DraftsPage";
 
 global._ = _;
 
@@ -24,7 +25,7 @@ function App() {
   const reduxContext = useSelector((state) => {
     return state.user;
   });
-  const { sendRequest, status, data, error } = useHttp(getUserFromToken);
+  const { sendRequest, status, data } = useHttp(getUserFromToken);
   const dispatch = useDispatch();
   const addUserHandler = bindActionCreators(addUser, dispatch);
 
@@ -35,7 +36,7 @@ function App() {
         await sendRequest();
       })();
     } else {
-      forceReload([]);
+      forceReload([]); //??:)) quen mat day lam cai j r :))??
     }
   }, [reduxContext]);
   useEffect(() => {
@@ -82,6 +83,9 @@ function App() {
                     </Route>
                     <Route path="/create">
                       <CreatePost reduxContext={reduxContext} />
+                    </Route>
+                    <Route path="/drafts">
+                      <DraftsPage reduxContext={reduxContext} exact />
                     </Route>
                     <Redirect to="/"></Redirect>
                   </Switch>

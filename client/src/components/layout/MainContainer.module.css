@@ -3,7 +3,8 @@
   min-height: 100vh;
   display: block;
   margin: 0 auto;
-  background-color: #FEF7FF;
+  max-width: 1400px;
+  background-color: #fef7ff;
   padding: 1rem;
   border-radius: 2em;
   box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.2),

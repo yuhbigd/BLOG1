@@ -1,7 +1,10 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
 const fs = require("fs");
+const { bucket } = require("../firebase/index");
+const uuid = require("uuid-v4");
 
 async function account_get(req, res) {
   const { email } = req.body.user;
@@ -57,6 +60,7 @@ async function account_put(req, res) {
       {
         name: data.name,
       },
+      { runValidators: true },
     );
     res.status(200).json({
       message: "Done",
@@ -80,26 +84,53 @@ function decodeBase64Image(dataString) {
 
   return response;
 }
+
 //function to change avatar
 async function avatar_put(req, res) {
   try {
     let unDupText = require("crypto").randomBytes(8).toString("hex");
     const imageBuffer = decodeBase64Image(req.body.avatar);
-    const filepath = `public/uploads/images/avatar-${unDupText}.png`;
+    const filePath = `public/uploads/images/avatar-${unDupText}.png`;
+    const metadata = {
+      metadata: {
+        // This line is very important. It's to create a download token.
+        firebaseStorageDownloadTokens: uuid(),
+      },
+      contentType: "image/png",
+      cacheControl: "public",
+    };
+    //
 
-    fs.writeFileSync(filepath, imageBuffer.data);
+    // Upload the image to the bucket
+    const file = bucket.file(filePath);
+    await file.save(imageBuffer.data, {
+      metadata: metadata,
+      gzip: true,
+      public: true,
+      metadata: metadata,
+    });
+    // download link
+    // console.log(file.metadata.mediaLink);
+
+    // fs.writeFileSync(filepath, imageBuffer.data);
 
     if (req.user.avatar !== "") {
-      fs.unlinkSync(`public${req.user.avatar}`);
+      // fs.unlinkSync(`public${req.user.avatar}`);
+      bucket
+        .file(req.user.avatar)
+        .delete()
+        .catch((error) => {
+          throw error;
+        });
     }
     await User.findOneAndUpdate(
       { _id: req.user._id },
-      { $set: { avatar: `/uploads/images/avatar-${unDupText}.png` } },
+      { $set: { avatar: filePath } },
       { upsert: true },
     );
 
     res.json({
-      link: `/uploads/images/avatar-${unDupText}.png`,
+      link: filePath,
       message: "done",
     });
   } catch (error) {

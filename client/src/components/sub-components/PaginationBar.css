@@ -1,0 +1,101 @@
+.pagination-container {
+  position: relative;
+  text-align: center;
+}
+.pagination-container > .pagination {
+  display: inline-flex;
+  list-style: none;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.pagination-container > .pagination > li {
+  color: #100f18;
+  padding: 0.5rem;
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  line-height: 33px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination-container > .pagination > li:last-child {
+  display: none;
+}
+.pagination-container > .pagination > li:hover {
+  background-color: #100f18;
+  color: #fff;
+  border-radius: 50px;
+}
+.pagination-container > .pagination > .rc-pagination-item-active {
+  background-color: #100f18;
+  color: #fff;
+  border-radius: 50px;
+}
+.pagination-container > .pagination > li > .custom-icon-next,
+.pagination-container > .pagination > li > .custom-icon-prev {
+  font-size: 1.5rem;
+}
+.pagination-container > .input-container {
+  margin-left: 1rem;
+  display: inline-block;
+  position: relative;
+  transform: translateY(-25%);
+}
+.pagination-container > .input-container > input {
+  -moz-appearance: textfield;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  width: 100px;
+  transition: all 250ms ease-in;
+  padding-right: 7px;
+}
+.pagination-container > .input-container > input:focus {
+  border-color: #100f18;
+}
+.pagination-container > .input-container > label {
+  position: absolute;
+  top: 50%;
+  font-size: small;
+  transform: translateY(-50%);
+  left: 6px;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.25s ease-in;
+}
+.pagination-container
+  > .input-container
+  > input:not(:placeholder-shown)
+  + label,
+.pagination-container > .input-container > input:focus + label {
+  top: 0;
+  color: #100f18;
+  background-color: #fff;
+}
+
+.pagination-container > .input-container > button {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+  transition: all 0.25s ease-in;
+}
+
+.pagination-container > .input-container > input::-webkit-outer-spin-button,
+.pagination-container > .input-container > input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .pagination-container > .input-container {
+    display: none;
+  }
+}

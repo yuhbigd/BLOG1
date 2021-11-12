@@ -81,9 +81,11 @@ a:hover {
 .my-editor {
   display: block;
   position: relative;
-  padding: 1em;
-  width: 90vw;
+  padding: 1rem;
+  width: calc(100%-2rem);
+  max-width: 90vw;
   min-height: 100px;
+  margin: 0 auto;
 }
 .my-editor:focus {
   outline: none;

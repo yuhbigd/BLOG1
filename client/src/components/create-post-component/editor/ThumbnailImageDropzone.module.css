@@ -2,11 +2,12 @@
   width: 100%;
   min-height: 50px;
   margin-top: 1rem;
-  border: 2px dashed red;
+  border: 2px dashed wheat;
+  padding: 5px;
 }
 .title-image {
   width: 95%;
-  max-height: 500px;
+  /* max-height: 500px; */
   display: block;
   margin: 2em auto;
   object-fit: cover;
@@ -14,4 +15,32 @@
 .container {
   width: 100%;
   margin-bottom: 1em;
+}
+.container > button {
+  outline: none;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  border: 1px solid #1f5eff;
+  color: #1f5eff;
+  font-weight: 600;
+  background-color: inherit;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  margin-right: 1rem;
+}
+.container > button:hover {
+  background-color: #1f5eff;
+  color: #ecf0f7;
+}
+.urlInput {
+  margin: 1rem 0;
+  padding: 0.4rem;
+  width: 50%;
+  border: none;
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
 }

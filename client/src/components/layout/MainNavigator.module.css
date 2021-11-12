@@ -137,6 +137,11 @@
   .nav .main-navigator .main-navigator--item .bottom-line {
     background-color: #e2e9fc;
   }
+  @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    .blurred-container {
+      background-color: rgba(58, 62, 78, 0.685);
+    }
+  }
 }
 
 .bar-icon {

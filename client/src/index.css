@@ -9,10 +9,11 @@
 }
 :root {
   --primary: #efc4ad;
-  --zFloat : 4;
+  --zFloat: 4;
   --zHeader: 5;
   --zModal: 6;
   --zSpinner: 50;
+  font-size: 16px;
 }
 body {
   color: #2f4858;

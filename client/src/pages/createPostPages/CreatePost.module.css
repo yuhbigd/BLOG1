@@ -13,3 +13,40 @@
   overflow-y: hidden;
   font-size: 1.5rem;
 }
+.button-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+.button-div > button {
+  padding: 0.5rem;
+  outline: none;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  flex-basis: 20%;
+  flex-shrink: 1;
+  border: 1px solid #181e39;
+}
+.public-button {
+  color: #181e39;
+  font-weight: 600;
+  background-color: inherit;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.public-button:hover {
+  background-color: #181e39;
+  color: #ecf0f7;
+}
+.draft-button {
+  color: #181e39;
+  font-weight: 600;
+  background-color: inherit;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.draft-button:hover {
+  background-color: #181e39;
+  color: #ecf0f7;
+}
