@@ -44,7 +44,7 @@ export async function deleteDraft(id) {
 }
 /* url/:id
  */
-export async function updateDraft(id, data) {
+export async function updateDraft({ id, data }) {
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(`${serverDomain}/drafts/${id}`, {
     method: "PUT",

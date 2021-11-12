@@ -1,14 +1,38 @@
 import React, { useRef, useState } from "react";
+import { updateDraft } from "../../api/draftsApi";
 import ConfirmDraft from "../../components/create-post-component/ConfirmDraft";
 import Editor from "../../components/create-post-component/editor/Editor";
+import Spinner from "../../components/sub-components/Spinner";
+import useHttp from "../../custom-hooks/use-http";
 import classes from "./CreatePost.module.css";
-function CreatePost() {
+function CreatePost(props) {
   const titleRef = useRef();
   const editorRef = useRef();
+  const idRef = useRef();
   const [showDraftConfirm, setShowDraftConfirm] = useState(false);
+  const {
+    sendRequest: sendDraftToServer,
+    status: sendDraftStatus,
+    data: draftData,
+    error: sendDraftError,
+  } = useHttp(updateDraft);
+  function updateDraftData() {
+    const thumbnailImage = editorRef.current.thumbnailImage();
+    const HTMLContent = editorRef.current.getHTMLContent();
+    const JSONContent = editorRef.current.getJSONContent();
+    const data = {
+      contentHtml: HTMLContent,
+      contentJson: JSONContent,
+      thumbnailImage,
+      title: titleRef.current.value,
+    };
+    sendDraftToServer({ id: idRef.current, data });
+  }
+
   // con phan public post chua lam :]
   return (
     <div className={classes.container}>
+      {sendDraftStatus === "pending" && <Spinner></Spinner>}
       <textarea
         style={{ borderRadius: "5px" }}
         placeholder="Post title!"
@@ -30,9 +54,16 @@ function CreatePost() {
         </button>
         <button
           className={classes["draft-button"]}
-          onClick={() => {
+          onClick={async () => {
             // editorRef.current.savePost();
-            setShowDraftConfirm(true);
+            if (!idRef.current) {
+              setShowDraftConfirm(true);
+            } else {
+              const update = updateDraftData();
+              const deleteImages =
+                editorRef.current.deleteRedundantImagesOnSave();
+              await Promise.all([update, deleteImages]);
+            }
           }}
         >
           Save to drafts
@@ -47,6 +78,7 @@ function CreatePost() {
             editorRef.current.deleteRedundantImagesOnSave
           }
           titleRef={titleRef}
+          idRef={idRef}
           thumbnailImage={editorRef.current.thumbnailImage}
           HTMLContent={editorRef.current.getHTMLContent}
           JSONContent={editorRef.current.getJSONContent}

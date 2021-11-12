@@ -45,8 +45,9 @@ function ConfirmDraft(props) {
         </Modal>,
       );
     }
-    if (draftData != null && sendDraftStatus == "completed") {
+    if (draftData !== null && sendDraftStatus == "completed") {
       props.hideComponent();
+      props.idRef.current = draftData.id;
     }
   }, [sendDraftStatus, draftData, sendDraftError]);
   return (
@@ -63,8 +64,9 @@ function ConfirmDraft(props) {
         <div className={classes["button-container"]}>
           <button
             onClick={async () => {
-              await props.deleteRedundantImagesOnSave();
-              await sendDraftData();
+              const deleteImages = props.deleteRedundantImagesOnSave();
+              const sendDraft = sendDraftData();
+              await Promise.all([deleteImages, sendDraft]);
             }}
             className={classes["save-button"]}
           >

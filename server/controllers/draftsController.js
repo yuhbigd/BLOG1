@@ -4,6 +4,7 @@ require("dotenv").config();
 async function draft_put(req, res) {
   try {
     const id = req.params.id;
+    console.log(id);
     if (!id) {
       throw new Error("data can not be emptied");
     }
@@ -54,7 +55,7 @@ async function draft_post(req, res) {
   try {
     const { name, contentHtml, contentJson, thumbnailImage, title } =
       req.body.data;
-    await Draft.create({
+    const draft = await Draft.create({
       name,
       userId: req.user._id,
       title,
@@ -64,6 +65,7 @@ async function draft_post(req, res) {
     });
     res.status(200).json({
       message: "Done",
+      id: draft._id,
     });
   } catch (error) {
     if (error.code) {
