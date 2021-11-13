@@ -78,6 +78,13 @@ a:hover {
 .ProseMirror > * + * {
   margin-top: 0.75em;
 }
+.my-editor p {
+  max-width: 90vw;
+  overflow-wrap: break-word;
+  line-break: strict;
+  word-break: break-all;
+  white-space: normal;
+}
 .my-editor {
   display: block;
   position: relative;
@@ -86,6 +93,8 @@ a:hover {
   max-width: 90vw;
   min-height: 100px;
   margin: 0 auto;
+  overflow-wrap: break-word;
+  line-break: strict;
 }
 .my-editor:focus {
   outline: none;

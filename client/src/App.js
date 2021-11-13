@@ -96,7 +96,6 @@ function App() {
               </Switch>
             </Suspense>
           </MainContainter>
-          <footer>"DUONG HUY - 🥓 🧑‍🚀"</footer>
         </>
       )}
     </div>

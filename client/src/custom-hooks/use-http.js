@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from "react";
-
+import { useMountedState } from "react-use";
 function httpReducer(state, action) {
   if (action.type === "SEND") {
     return {
@@ -29,27 +29,30 @@ function httpReducer(state, action) {
 }
 
 function useHttp(requestFunction, startWithPending = false) {
+  const isMounted = useMountedState();
   const [httpState, dispatch] = useReducer(httpReducer, {
     status: startWithPending ? "pending" : null,
     data: null,
     error: null,
   });
-
   const sendRequest = useCallback(
     async function (requestData) {
       dispatch({ type: "SEND" });
       try {
         const responseData = await requestFunction(requestData);
-        dispatch({ type: "SUCCESS", responseData });
+        if (isMounted()) {
+          dispatch({ type: "SUCCESS", responseData });
+        }
       } catch (error) {
-        console.log("dispatch");
-        dispatch({
-          type: "ERROR",
-          errorMessage: {
-            message: error.message || "Something went wrong!",
-            statusCode: error.statusCode,
-          },
-        });
+        if (isMounted()) {
+          dispatch({
+            type: "ERROR",
+            errorMessage: {
+              message: error.message || "Something went wrong!",
+              statusCode: error.statusCode,
+            },
+          });
+        }
       }
     },
     [requestFunction],

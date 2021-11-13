@@ -27,20 +27,24 @@ export default function PaginationBar(props) {
   }, [props.page]);
   return (
     <div className={"pagination-container"}>
-      <Pagination
-        defaultPageSize={props.pageSize}
-        defaultCurrent={1}
-        current={props.page}
-        onChange={props.change}
-        total={props.total}
-        nextIcon={<FaAngleRight className={`custom-icon-next`}></FaAngleRight>}
-        showLessItems
-        prevIcon={<FaAngleLeft className={`custom-icon-prev`}></FaAngleLeft>}
-        jumpPrevIcon="..."
-        jumpNextIcon="..."
-        hideOnSinglePage
-        className={"pagination"}
-      />
+      {props.total > props.pageSize && (
+        <Pagination
+          defaultPageSize={props.pageSize}
+          defaultCurrent={1}
+          current={props.page}
+          onChange={props.change}
+          total={props.total}
+          nextIcon={
+            <FaAngleRight className={`custom-icon-next`}></FaAngleRight>
+          }
+          showLessItems
+          prevIcon={<FaAngleLeft className={`custom-icon-prev`}></FaAngleLeft>}
+          jumpPrevIcon="..."
+          jumpNextIcon="..."
+          hideOnSinglePage
+          className={"pagination"}
+        />
+      )}
       {props.total > props.pageSize && (
         <div className="input-container">
           <input

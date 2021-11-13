@@ -1,9 +1,17 @@
+.draft-page {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  flex-direction: column;
+}
 .container {
   padding: 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   grid-gap: 1rem;
   grid-auto-flow: row dense;
+
 }
 
 .item-enter-active {
@@ -11,11 +19,9 @@
   transition: opacity 500ms ease-in;
 }
 .item-exit {
-  transform: scale(1);
   opacity: 1;
 }
 .item-exit-active {
-  transform: scale(0);
   opacity: 0;
   transition: all 500ms ease-in;
 }

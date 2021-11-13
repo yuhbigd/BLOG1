@@ -7,14 +7,17 @@ html {
 
 .App {
   position: absolute;
-  background-image: linear-gradient(
-    to left bottom,
-    #efc4ad,
-    #d0bd98,
-    #adb58f,
-    #89ac90,
-    #69a196
-  );
+  background: #dad299; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #b0dab9,
+    #dad299
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #b0dab9,
+    #dad299
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   min-width: 100%;
   min-height: 100%;
   display: grid;

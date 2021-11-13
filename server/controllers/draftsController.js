@@ -4,7 +4,6 @@ require("dotenv").config();
 async function draft_put(req, res) {
   try {
     const id = req.params.id;
-    console.log(id);
     if (!id) {
       throw new Error("data can not be emptied");
     }
@@ -83,21 +82,33 @@ async function draft_post(req, res) {
 }
 async function draft_get_all_post(req, res) {
   try {
+    const isCount = req.query.isCount;
+    if (isCount) {
+      if (isCount === "1") {
+        const countDocument = await Draft.count({
+          userId: req.user._id,
+        }).exec();
+
+        res.status(200).json({
+          count: countDocument,
+        });
+        return;
+      }
+    }
     const pageNum = parseInt(req.query.pageNum) - 1 || 0;
     const numPerPage = parseInt(req.query.numPerPage) || 10;
-    console.log(pageNum, numPerPage);
-    const countDocument = await Draft.count({ userId: req.user._id }).exec();
+    const skip = pageNum * numPerPage;
     const draft = await Draft.find({ userId: req.user._id })
       .sort({ _id: -1 })
       .skip(skip)
       .limit(numPerPage)
+      .select({ _id: 1, name: 1 })
       .exec();
     if (!draft) {
       throw new Error("No document found");
     }
     res.status(200).json({
       drafts: draft,
-      count: countDocument,
     });
   } catch (error) {
     if (error.code) {

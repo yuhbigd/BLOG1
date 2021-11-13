@@ -21,7 +21,7 @@ import { useHistory, Prompt } from "react-router-dom";
 import FontSize from "./custom-font-size";
 import { FaUnlink } from "react-icons/fa";
 import ThumbnailImageDropzone from "./ThumbnailImageDropzone";
-const storageDomain = process.env.REACT_APP_STORAGE_URL ;
+const storageDomain = process.env.REACT_APP_STORAGE_URL;
 //get base64 from image
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
