@@ -1,6 +1,28 @@
 .card {
-  background-color: aqua;
-  min-height: 100px;
+  text-decoration: none;
+  color: #3a3e4e;
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+}
+.card > button {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  outline: none;
+  border: 2px solid #ccc;
+  color: #f62847;
+  font-weight: 600;
+  background-color: inherit;
+  border-radius: 50%;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card > button:hover {
+  background-color: #f62847;
+  color: #ecf0f7;
 }
 .item-enter {
   opacity: 0;

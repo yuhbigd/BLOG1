@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { updateDraft } from "../../api/draftsApi";
 import ConfirmDraft from "../../components/create-post-component/ConfirmDraft";
 import Editor from "../../components/create-post-component/editor/Editor";
@@ -28,7 +28,17 @@ function CreatePost(props) {
     };
     sendDraftToServer({ id: idRef.current, data });
   }
-
+  //for draft detail
+  useEffect(() => {
+    if (props.id) {
+      idRef.current = props.id;
+    }
+    if (props.draft) {
+      if (props.draft.title) {
+        titleRef.current.value = props.draft.title;
+      }
+    }
+  }, []);
   // con phan public post chua lam :]
   return (
     <div className={classes.container}>
@@ -47,7 +57,15 @@ function CreatePost(props) {
           }
         }}
       ></textarea>
-      <Editor ref={editorRef}></Editor>
+      {props.draft ? (
+        <Editor
+          ref={editorRef}
+          contentJson={props.draft.contentJson}
+          thumbnailImg={props.draft.thumbnailImage}
+        ></Editor>
+      ) : (
+        <Editor ref={editorRef} contentJson={null} thumbnailImg={""}></Editor>
+      )}
       <div className={classes["button-div"]}>
         <button className={classes["public-button"]}>
           Public this article

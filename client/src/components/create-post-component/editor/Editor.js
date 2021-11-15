@@ -55,6 +55,7 @@ const Editor = React.forwardRef((props, ref) => {
   //error state
   const [errorState, setErrorState] = useState(null);
   const editor = useEditor({
+    content: props.contentJson,
     editorProps: {
       attributes: {
         class: "my-editor",
@@ -204,6 +205,7 @@ const Editor = React.forwardRef((props, ref) => {
         imageArray.push(thumbnailRef.current);
       }
     }
+
     imageArray = imageArray.map((item) => {
       return item.split(storageDomain)[1];
     });
@@ -217,7 +219,33 @@ const Editor = React.forwardRef((props, ref) => {
       await deleteRedundantImage({ images: redundantImages });
     }
   };
-
+  // for draft detail
+  useEffect(() => {
+    if (props.contentJson) {
+      let imageArray = props.contentJson.content
+        .filter((item) => {
+          if (item.type === "image") {
+            return true;
+          }
+        })
+        .map((item) => {
+          return item.attrs.src;
+        })
+        .filter((item) => {
+          return item.includes(storageDomain, 0);
+        });
+      if (props.thumbnailImg !== "") {
+        if (props.thumbnailImg.includes(storageDomain, 0)) {
+          imageArray.push(props.thumbnailImg);
+        }
+      }
+      imageArray = imageArray.map((item) => {
+        return item.split(storageDomain)[1];
+      });
+      allImageRef.current = new Set(imageArray);
+      saveImagesRefs.current = new Set(imageArray);
+    }
+  }, []);
   // check image in saveImages with all image and remove all redundant images / out
 
   //forward Ref
@@ -232,6 +260,7 @@ const Editor = React.forwardRef((props, ref) => {
       <ThumbnailImageDropzone
         allImageRef={allImageRef}
         thumbnailRef={thumbnailRef}
+        thumbnailImg={props.thumbnailImg}
         setShowPrompt={() => {
           setShowPrompt(true);
         }}

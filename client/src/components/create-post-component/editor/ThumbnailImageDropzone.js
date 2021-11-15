@@ -33,6 +33,36 @@ function ThumbnailImageDropzone(props) {
     maxSize: 5242880,
     onDrop: handleDrop,
   });
+
+  // for save draft
+  useEffect(() => {
+    if (props.thumbnailImg) {
+      if (props.thumbnailImg.includes(storageDomain,0)) {
+        setShowDrop("From url");
+        setPreview({
+          html: (
+            <img
+              className={classes["title-image"]}
+              src={props.thumbnailImg}
+            ></img>
+          ),
+          src: props.thumbnailImg,
+        });
+        props.thumbnailRef.current = props.thumbnailImg;
+      } else {
+        setShowDrop("From local");
+        setPreview({
+          html: (
+            <img
+              className={classes["title-image"]}
+              src={props.thumbnailImg}
+            ></img>
+          ),
+          src: props.thumbnailImg,
+        });
+      }
+    }
+  }, []);
   // function to handle file which is dropped into zone
   async function handleDrop(file, fileRejections) {
     if (!_.isEmpty(file)) {

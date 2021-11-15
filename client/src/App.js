@@ -16,6 +16,7 @@ import Account from "./pages/accountSettingPages/Account";
 import MainContainter from "./components/layout/MainContainter";
 import CreatePost from "./pages/createPostPages/CreatePost";
 import DraftsPage from "./pages/draftsPages/DraftsPage";
+import DraftDetail from "./pages/DraftItem/DraftDetail";
 
 global._ = _;
 
@@ -84,8 +85,11 @@ function App() {
                     <Route path="/create">
                       <CreatePost reduxContext={reduxContext} />
                     </Route>
-                    <Route path="/drafts">
+                    <Route path="/drafts" exact>
                       <DraftsPage reduxContext={reduxContext} exact />
+                    </Route>
+                    <Route path="/drafts/:draftId">
+                      <DraftDetail reduxContext={reduxContext} />
                     </Route>
                     <Redirect to="/"></Redirect>
                   </Switch>

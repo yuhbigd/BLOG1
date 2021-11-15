@@ -68,11 +68,17 @@ export async function updateDraft({ id, data }) {
    name, contentHtml, contentJson, thumbnailImage
 }
 */
-export async function getDrafts({ pageNum = 1, numPerPage = 10 }) {
+export async function getDrafts({
+  pageNum = 1,
+  numPerPage = 10,
+  searchString,
+}) {
+  if (!searchString) {
+    searchString = "";
+  }
   const serverDomain = process.env.REACT_APP_BASE_URL;
-
   const response = await fetch(
-    `${serverDomain}/drafts?pageNum=${pageNum}&numPerPage=${numPerPage}`,
+    `${serverDomain}/drafts?pageNum=${pageNum}&numPerPage=${numPerPage}&searchString=${searchString}`,
     {
       credentials: "include",
     },
@@ -89,15 +95,33 @@ export async function getDrafts({ pageNum = 1, numPerPage = 10 }) {
    name, contentHtml, contentJson, thumbnailImage
 }
 */
-export async function getNumberOfDrafts() {
+export async function getNumberOfDrafts(searchString) {
   const serverDomain = process.env.REACT_APP_BASE_URL;
-
-  const response = await fetch(`${serverDomain}/drafts?isCount=1`, {
+  if (!searchString) {
+    searchString = "";
+  }
+  const response = await fetch(
+    `${serverDomain}/drafts?isCount=1&searchString=${searchString}`,
+    {
+      credentials: "include",
+    },
+  );
+  const data = await response.json();
+  if (!response.ok || data.error) {
+    let error = new Error(data.error || "Can not get this content");
+    Object.assign(error, { statusCode: response.status });
+    throw error;
+  }
+  return data;
+}
+export async function getSingleDraft(id) {
+  const serverDomain = process.env.REACT_APP_BASE_URL;
+  const response = await fetch(`${serverDomain}/drafts/${id}`, {
     credentials: "include",
   });
   const data = await response.json();
   if (!response.ok || data.error) {
-    let error = new Error(data.error || "Can not get this content");
+    let error = new Error(data.error || "Not found");
     Object.assign(error, { statusCode: response.status });
     throw error;
   }

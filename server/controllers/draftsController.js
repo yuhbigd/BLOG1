@@ -1,5 +1,4 @@
 const Draft = require("../models/draftModel");
-require("dotenv").config();
 
 async function draft_put(req, res) {
   try {
@@ -37,12 +36,12 @@ async function draft_delete(req, res) {
     const userId = req.user._id;
     const draft = await Draft.findOneAndDelete({
       $and: [{ _id: id }, { userId: userId }],
-    });
+    }).select({ contentJson: 1, thumbnailImage: 1 });
     if (!draft) {
       throw new Error("No document found");
     }
     res.status(200).json({
-      message: "Done",
+      draft: draft,
     });
   } catch (error) {
     res.status(404).json({
@@ -82,11 +81,13 @@ async function draft_post(req, res) {
 }
 async function draft_get_all_post(req, res) {
   try {
+    const searchString = req.query.searchString || "";
     const isCount = req.query.isCount;
     if (isCount) {
       if (isCount === "1") {
         const countDocument = await Draft.count({
           userId: req.user._id,
+          name: { $regex: ".*" + searchString + ".*", $options: "i" },
         }).exec();
 
         res.status(200).json({
@@ -97,8 +98,12 @@ async function draft_get_all_post(req, res) {
     }
     const pageNum = parseInt(req.query.pageNum) - 1 || 0;
     const numPerPage = parseInt(req.query.numPerPage) || 10;
+
     const skip = pageNum * numPerPage;
-    const draft = await Draft.find({ userId: req.user._id })
+    const draft = await Draft.find({
+      userId: req.user._id,
+      name: { $regex: ".*" + searchString + ".*", $options: "i" },
+    })
       .sort({ _id: -1 })
       .skip(skip)
       .limit(numPerPage)
@@ -133,7 +138,7 @@ async function draft_get_single_post(req, res) {
     const userId = req.user._id;
     const draft = await Draft.findOne({
       $and: [{ _id: id }, { userId: userId }],
-    });
+    }).select({ _id: 1, title: 1, thumbnailImage: 1, contentJson: 1 });
     if (!draft) {
       throw new Error("No document found");
     }

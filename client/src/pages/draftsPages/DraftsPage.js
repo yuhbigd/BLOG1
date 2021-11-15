@@ -7,6 +7,9 @@ import useHttp from "../../custom-hooks/use-http";
 import { deleteDraft, getDrafts, getNumberOfDrafts } from "../../api/draftsApi";
 import { useMountedState } from "react-use";
 import { useUpdateEffect } from "react-use";
+import { useHistory, useLocation } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
+import { removeImagesRedundancy } from "../../api/editorApi";
 const draftsReducerCase = {
   changePage: "changePage",
   setData: "setData",
@@ -49,8 +52,39 @@ function draftsReducer(state, action) {
   }
   return state;
 }
+function useQuery() {
+  const { search } = useLocation();
 
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+function redundantImage(content, thumbnailImg) {
+  let imageArray = content
+    .filter((item) => {
+      if (item.type === "image") {
+        return true;
+      }
+    })
+    .map((item) => {
+      return item.attrs.src;
+    })
+    .filter((item) => {
+      return item.includes(process.env.REACT_APP_STORAGE_URL, 0);
+    });
+  if (thumbnailImg !== "") {
+    if (thumbnailImg.includes(process.env.REACT_APP_STORAGE_URL, 0)) {
+      imageArray.push(thumbnailImg);
+    }
+  }
+  imageArray = imageArray.map((item) => {
+    return item.split(process.env.REACT_APP_STORAGE_URL)[1];
+  });
+  return imageArray;
+}
 function DraftsPage() {
+  let query = useQuery();
+  const searchInput = useRef();
+  const history = useHistory();
+  const isChangeQuery = useRef(false);
   // If onDelete = true -> delete draft function will be ignored -> wait until no draft is being deleted
   const [onDelete, setOnDelete] = useState(false);
   // run only the first time after component mount
@@ -62,7 +96,24 @@ function DraftsPage() {
     data: allDraftsFromServer,
     error: DraftsError,
   } = useHttp(getDrafts);
-  const { sendRequest: deleteDraftFromServer } = useHttp(deleteDraft);
+  const { sendRequest: deleteDraftFromServer, data: deletedDraftFromServer } =
+    useHttp(deleteDraft);
+
+  const {
+    sendRequest: deleteRedundantImage,
+    status: deleteRedundantImageStatus,
+    data: deleteRedundantImageData,
+    error: deleteRedundantImageError,
+  } = useHttp(removeImagesRedundancy);
+  useUpdateEffect(() => {
+    if (isComponentMount()) {
+      let images = redundantImage(
+        deletedDraftFromServer.draft.contentJson.content,
+        deletedDraftFromServer.draft.thumbnailImage,
+      );
+      deleteRedundantImage({ images: images });
+    }
+  }, [deletedDraftFromServer]);
   const [draftsData, dispatchDrafts] = useReducer(draftsReducer, {
     data: [],
     pageNumber: 1,
@@ -71,9 +122,10 @@ function DraftsPage() {
   });
   // if component is mounted
   useEffect(() => {
+    searchInput.current.value = query.get("search");
     (async () => {
       //get and set number of draft
-      const number = await getNumberOfDrafts();
+      const number = await getNumberOfDrafts(query.get("search"));
       if (isComponentMount()) {
         dispatchDrafts({
           type: draftsReducerCase.setNumberOfDrafts,
@@ -84,26 +136,61 @@ function DraftsPage() {
   }, []);
   // get draft data if page or num per page is changed
   useUpdateEffect(() => {
-    getDraftsFromServer({
-      pageNum: draftsData.pageNumber,
-      numPerPage: draftsData.numPerPage,
-    });
-  }, [draftsData.pageNumber, draftsData.numPerPage]);
-  // get data on component mount and when user deleted draft
-  useUpdateEffect(() => {
-    if (isFirstTime.current) {
+    if (draftsData.numberOfDrafts > 0) {
       getDraftsFromServer({
         pageNum: draftsData.pageNumber,
         numPerPage: draftsData.numPerPage,
+        searchString: query.get("search"),
+      });
+    }
+  }, [draftsData.pageNumber, draftsData.numPerPage]);
+  // get data on component mount and when user deleted draft
+  useUpdateEffect(() => {
+    if (isFirstTime.current && draftsData.numberOfDrafts > 0) {
+      getDraftsFromServer({
+        pageNum: draftsData.pageNumber,
+        numPerPage: draftsData.numPerPage,
+        searchString: query.get("search"),
       });
       isFirstTime.current = false;
     } else {
-      setOnDelete(true);
-      window.setTimeout(() => {
-        updateDataOnDelete();
-      }, 500);
+      if (!isChangeQuery.current) {
+        setOnDelete(true);
+        window.setTimeout(() => {
+          updateDataOnDelete();
+        }, 500);
+      }
     }
   }, [draftsData.numberOfDrafts]);
+
+  useUpdateEffect(() => {
+    // update data on search
+    (async () => {
+      //get and set number of draft
+      const number = await getNumberOfDrafts(query.get("search"));
+      if (isComponentMount()) {
+        isChangeQuery.current = true;
+        dispatchDrafts({
+          type: draftsReducerCase.setNumberOfDrafts,
+          numberOfDrafts: number.count,
+        });
+        if (number.count > 0) {
+          if (draftsData.pageNumber !== 1) {
+            changePage(1);
+          } else {
+            dispatchDrafts({ type: draftsReducerCase.setData, data: [] });
+            getDraftsFromServer({
+              pageNum: 1,
+              numPerPage: draftsData.numPerPage,
+              searchString: query.get("search"),
+            });
+          }
+        } else {
+          changePage(1);
+        }
+      }
+    })();
+  }, [query.get("search")]);
   //change page and delete all the data to create new data
   function changePage(page) {
     dispatchDrafts({ type: draftsReducerCase.changePage, pageNumber: page });
@@ -117,6 +204,7 @@ function DraftsPage() {
         getDraftsFromServer({
           pageNum: draftsData.pageNumber,
           numPerPage: draftsData.numPerPage,
+          searchString: query.get("search"),
         });
       } else {
         if (draftsData.pageNumber > 1 && isComponentMount()) {
@@ -137,6 +225,7 @@ function DraftsPage() {
           data: allDraftsFromServer.drafts,
         });
         setOnDelete(false);
+        isChangeQuery.current = false;
       }
     }
   }, [allDraftsFromServer, getDraftsStatus, DraftsError]);
@@ -144,11 +233,42 @@ function DraftsPage() {
   return (
     <div className={classes["draft-page"]}>
       <TransitionGroup className={classes.container}>
+        <div>
+          <input
+            type="text"
+            name="text"
+            ref={searchInput}
+            placeholder="search"
+            onKeyDown={(event) => {
+              event.stopPropagation();
+              if (event.key === "Enter") {
+                if (searchInput.current.value !== "") {
+                  history.replace(
+                    `/drafts?search=${searchInput.current.value}`,
+                  );
+                } else {
+                  history.replace(`/drafts`);
+                }
+              }
+            }}
+          />
+          <button
+            onClick={() => {
+              if (searchInput.current.value !== "") {
+                history.replace(`/drafts?search=${searchInput.current.value}`);
+              } else {
+                history.replace(`/drafts`);
+              }
+            }}
+          >
+            <FaSearch />
+          </button>
+        </div>
         {draftsData.data.map((item) => {
           return (
             <CSSTransition
               key={item._id}
-              timeout={500}
+              timeout={300}
               classNames={{
                 enter: classes["item-enter"],
                 enterActive: classes["item-enter-active"],
@@ -159,6 +279,7 @@ function DraftsPage() {
               <DraftCard
                 name={item.name}
                 key={item._id}
+                id={item._id}
                 close={async () => {
                   if (!onDelete) {
                     await deleteDraftFromServer(item._id);
@@ -175,6 +296,20 @@ function DraftsPage() {
           );
         })}
       </TransitionGroup>
+      {draftsData.numberOfDrafts === 0 && (
+        <p
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: "1.2rem",
+            fontWeight: "bold",
+          }}
+        >
+          {"Can not find any drafts!"}
+        </p>
+      )}
       <PaginationBar
         page={draftsData.pageNumber}
         change={changePage}

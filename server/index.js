@@ -12,8 +12,8 @@ global._ = _;
 
 require("dotenv").config();
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb" }));
 app.use(cookie_Parse());
 app.use(express.static("public"));
 
