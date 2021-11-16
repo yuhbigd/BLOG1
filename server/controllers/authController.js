@@ -87,8 +87,8 @@ signup_post = async (req, res) => {
 login_post = async (req, res) => {
   try {
     let { email, password } = req.body.user;
-    email = sanitize(email);
-    password = sanitize(password);
+    // email = sanitize(email);
+    // password = sanitize(password);
     const user = await User.login(email, password);
 
     const { token, refreshToken } = await createToken(user);

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useHistory } from "react-router";
 import { useMountedState, useUpdateEffect } from "react-use";
 import { getSingleDraft } from "../../api/draftsApi";
 import useHttp from "../../custom-hooks/use-http";
 import CreatePost from "../createPostPages/CreatePost";
 
 function DraftDetail(props) {
+  const history = useHistory();
   const isMount = useMountedState();
   const [component, setComponent] = useState(null);
   const params = useParams();
@@ -28,6 +29,8 @@ function DraftDetail(props) {
           ></CreatePost>,
         );
       }
+    } else if (DraftError) {
+      history.push("/");
     }
   }, [DraftFromServer, getDraftStatus, DraftError]);
   return <div>{component}</div>;

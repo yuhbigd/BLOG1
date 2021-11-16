@@ -1,11 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router";
+import { useMountedState, useUpdateEffect } from "react-use";
 import { updateDraft } from "../../api/draftsApi";
+import { publicArticle } from "../../api/postArticleApi";
 import ConfirmDraft from "../../components/create-post-component/ConfirmDraft";
 import Editor from "../../components/create-post-component/editor/Editor";
+import ErrorComponent from "../../components/sub-components/ErrorComponent";
+import Modal from "../../components/sub-components/Modal";
 import Spinner from "../../components/sub-components/Spinner";
 import useHttp from "../../custom-hooks/use-http";
 import classes from "./CreatePost.module.css";
 function CreatePost(props) {
+  const history = useHistory();
+  const isMount = useMountedState();
   const titleRef = useRef();
   const editorRef = useRef();
   const idRef = useRef();
@@ -40,9 +47,53 @@ function CreatePost(props) {
     }
   }, []);
   // con phan public post chua lam :]
+  const {
+    sendRequest: sendArticleToServer,
+    status: sendArticleStatus,
+    data: articleData,
+    error: sendArticleError,
+  } = useHttp(publicArticle);
+  const [errorState, setErrorState] = useState(null);
+  function sendArticle() {
+    const thumbnailImage = editorRef.current.thumbnailImage();
+    const HTMLContent = editorRef.current.getHTMLContent();
+    const JSONContent = editorRef.current.getJSONContent();
+    const data = {
+      contentHtml: HTMLContent,
+      contentJson: JSONContent,
+      thumbnailImage: thumbnailImage,
+      title: titleRef.current.value,
+    };
+    sendArticleToServer(data);
+  }
+  useUpdateEffect(() => {
+    if (isMount()) {
+      if (sendArticleError != null) {
+        setErrorState(
+          <Modal
+            clickHandle={() => {
+              setErrorState(null);
+            }}
+          >
+            <ErrorComponent
+              clickHandle={() => {
+                setErrorState(null);
+              }}
+              message={`${sendArticleError.message} - ${sendArticleError.statusCode}`}
+            ></ErrorComponent>
+          </Modal>,
+        );
+      }
+      if (articleData && sendArticleStatus === "completed") {
+        history.push(`/posts/${articleData.article.slugUrl}`);
+      }
+    }
+  }, [sendArticleStatus, articleData, sendArticleError]);
   return (
     <div className={classes.container}>
-      {sendDraftStatus === "pending" && <Spinner></Spinner>}
+      {(sendDraftStatus === "pending" || sendArticleStatus === "pending") && (
+        <Spinner></Spinner>
+      )}
       <textarea
         style={{ borderRadius: "5px" }}
         placeholder="Post title!"
@@ -67,7 +118,15 @@ function CreatePost(props) {
         <Editor ref={editorRef} contentJson={null} thumbnailImg={""}></Editor>
       )}
       <div className={classes["button-div"]}>
-        <button className={classes["public-button"]}>
+        <button
+          className={classes["public-button"]}
+          onClick={async () => {
+            const sendData = sendArticle();
+            const deleteImages =
+              editorRef.current.deleteRedundantImagesOnSave();
+            await Promise.all([sendData, deleteImages]);
+          }}
+        >
           Public this article
         </button>
         <button
@@ -102,6 +161,7 @@ function CreatePost(props) {
           JSONContent={editorRef.current.getJSONContent}
         ></ConfirmDraft>
       )}
+      {errorState}
     </div>
   );
 }

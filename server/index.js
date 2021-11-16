@@ -5,6 +5,7 @@ const authRouter = require("./routers/authRouter");
 const accountRouter = require("./routers/accountRouter");
 const postsRouter = require("./routers/postsRouter");
 const draftsRouter = require("./routers/draftsRouter");
+const userRouter = require("./routers/uRouter");
 const _ = require("lodash");
 const cors = require("cors");
 const { checkUser } = require("./middlewares/authMiddleware");
@@ -40,6 +41,7 @@ app.use("/", authRouter.router);
 app.use("/account", [checkUser], accountRouter.router);
 app.use("/posts", [checkUser], postsRouter.router);
 app.use("/drafts", [checkUser], draftsRouter.router);
+app.use("/u", [checkUser], userRouter.router);
 app.listen(3001, () => {
   console.log("server is listen on port 3001");
 });

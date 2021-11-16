@@ -11,7 +11,7 @@ import Image from "./custom-image";
 import Menu from "./Menu";
 import React from "react";
 import { useEffect, useRef, useState, useImperativeHandle } from "react";
-import { useDropArea, useBeforeUnload } from "react-use";
+import { useDropArea, useBeforeUnload, useMountedState } from "react-use";
 import useHttp from "../../../custom-hooks/use-http";
 import { removeImagesRedundancy, sendImage } from "../../../api/editorApi";
 import Spinner from "../../sub-components/Spinner";
@@ -35,6 +35,7 @@ const Editor = React.forwardRef((props, ref) => {
   const history = useHistory();
   const navRef = useRef(true);
   const thumbnailRef = useRef("");
+  const isMount = useMountedState();
   const [showPrompt, setShowPrompt] = useState(false);
   //function to send the image and get the image link back
   const {
@@ -62,8 +63,10 @@ const Editor = React.forwardRef((props, ref) => {
       },
     },
     onUpdate({ editor }) {
-      if (!showPrompt) {
-        setShowPrompt(true);
+      if (isMount()) {
+        if (!showPrompt) {
+          setShowPrompt(true);
+        }
       }
     },
     extensions: [
@@ -159,29 +162,31 @@ const Editor = React.forwardRef((props, ref) => {
     },
   });
   useEffect(() => {
-    if (sendImageError != null) {
-      setErrorState(
-        <Modal
-          clickHandle={() => {
-            setErrorState(null);
-          }}
-        >
-          <ErrorComponent
+    if (isMount()) {
+      if (sendImageError != null) {
+        setErrorState(
+          <Modal
             clickHandle={() => {
               setErrorState(null);
             }}
-            message={`${sendImageError.message} - ${sendImageError.statusCode}`}
-          ></ErrorComponent>
-        </Modal>,
-      );
-    }
-    if (imageData != null && sendImageStatus == "completed") {
-      editor
-        .chain()
-        .focus()
-        .setImage({ src: storageDomain + imageData.link })
-        .run();
-      allImageRef.current.add(imageData.link);
+          >
+            <ErrorComponent
+              clickHandle={() => {
+                setErrorState(null);
+              }}
+              message={`${sendImageError.message} - ${sendImageError.statusCode}`}
+            ></ErrorComponent>
+          </Modal>,
+        );
+      }
+      if (imageData != null && sendImageStatus == "completed") {
+        editor
+          .chain()
+          .focus()
+          .setImage({ src: storageDomain + imageData.link })
+          .run();
+        allImageRef.current.add(imageData.link);
+      }
     }
   }, [sendImageStatus, imageData, sendImageError]);
   // check image in editor with all image then remove all redundant images and create saveImages / save

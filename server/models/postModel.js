@@ -17,7 +17,7 @@ const postSchema = new mongoose.Schema({
   },
   thumbnailImage: {
     type: String,
-    required: true,
+    required: [true, "Thumbnail image can not be emptied"],
   },
   contentHtml: {
     type: String,
@@ -37,8 +37,21 @@ const postSchema = new mongoose.Schema({
   dayViews: { type: Number, default: 0, index: true },
   monthViews: { type: Number, default: 0, index: true },
   yearViews: { type: Number, default: 0, index: true },
-  comments: { type: Array, default: [] },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+  comments: [
+    {
+      text: String,
+      author: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+    },
+  ],
 });
+
+postSchema.statics.addView = async function (id) {
+  await this.findOneAndUpdate(
+    { _id: id },
+    { $inc: { totalViews: 1, dayViews: 1, monthViews: 1, yearViews: 1 } },
+  );
+};
 const Post = mongoose.model("posts", postSchema);
 
 module.exports = Post;

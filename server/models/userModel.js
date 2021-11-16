@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { isEmail } = require("validator");
+const sanitize = require("mongo-sanitize");
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -55,9 +56,12 @@ userSchema.pre("updateOne", async function (next) {
 });
 
 userSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email: email });
+  const user = await this.findOne({ email: sanitize(email) });
   if (user) {
-    const isCorrectPass = await bcrypt.compare(password, user.password);
+    const isCorrectPass = await bcrypt.compare(
+      sanitize(password),
+      user.password,
+    );
     if (isCorrectPass) {
       return user;
     }
@@ -65,7 +69,14 @@ userSchema.statics.login = async function (email, password) {
   }
   throw new Error("Your email or password is incorrect");
 };
-
+userSchema.statics.checkUser = async function (userId) {
+  let _id = sanitize(userId);
+  const user = await this.findOne({ _id: _id });
+  if (!user) {
+    throw new Error("user not found");
+  }
+  return true;
+};
 const User = mongoose.model("users", userSchema);
 
 module.exports = User;
