@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const posts = require("../controllers/postsController");
-
+const { checkBotMiddleware } = require("../middlewares/checkBotMiddleware");
 const multer = require("multer");
 const router = Router();
 const imageUpload = multer({
@@ -29,7 +29,7 @@ function uploadFile(req, res, next) {
 }
 router.post("/images", [uploadFile], posts.image_post_put);
 router.delete("/images", posts.images_post_delete);
-router.post("/", posts.article_post);
+router.post("/", [checkBotMiddleware], posts.article_post);
 router.put("/:slug", posts.post_put);
 router.delete("/:slug", posts.post_delete);
 router.get("/", posts.get_all_post);

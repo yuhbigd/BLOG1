@@ -33,7 +33,7 @@ function CreatePost(props) {
       thumbnailImage,
       title: titleRef.current.value,
     };
-    sendDraftToServer({ id: idRef.current, data });
+    return sendDraftToServer({ id: idRef.current, data });
   }
   //for draft detail
   useEffect(() => {
@@ -64,7 +64,7 @@ function CreatePost(props) {
       thumbnailImage: thumbnailImage,
       title: titleRef.current.value,
     };
-    sendArticleToServer(data);
+    return sendArticleToServer(data);
   }
   useUpdateEffect(() => {
     if (isMount()) {

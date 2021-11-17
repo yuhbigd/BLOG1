@@ -1,11 +1,12 @@
 export async function publicArticle(data) {
+  const tokenCaptcha = await window.getReCaptchaToken();
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(`${serverDomain}/posts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ data: data }),
+    body: JSON.stringify({ data: data, tokenCaptcha }),
     credentials: "include",
   });
 

@@ -39,6 +39,7 @@ export async function signup(user) {
 }
 
 export async function getUserFromToken() {
+
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(`${serverDomain}/login`, {
     credentials: "include",

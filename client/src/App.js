@@ -18,20 +18,21 @@ import CreatePost from "./pages/createPostPages/CreatePost";
 import DraftsPage from "./pages/draftsPages/DraftsPage";
 import DraftDetail from "./pages/DraftItem/DraftDetail";
 import MyPost from "./pages/myPostsPage/MyPost";
+import Post from "./pages/postPage/Post";
 
 global._ = _;
 
-function App() {
-  // create Captcha to check bot
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src =
-      "https://www.google.com/recaptcha/api.js?render=6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV";
-    script.async = true;
-    document.head.appendChild(script);
-    script.onload = () => {
-      window.getReCaptchaToken = new Promise((res, rej) => {
-        window.grecaptcha.ready(() =>
+// create Captcha to check bot
+document.addEventListener("DOMContentLoaded", function () {
+  const script = document.createElement("script");
+  script.src =
+    "https://www.google.com/recaptcha/api.js?render=6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV";
+  script.async = true;
+  document.head.appendChild(script);
+  script.onload = () => {
+    function getCaptcha() {
+      return new Promise((res, rej) => {
+        window.grecaptcha.ready(() => {
           window.grecaptcha
             .execute("6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV", {
               action: "submit",
@@ -41,12 +42,14 @@ function App() {
             })
             .catch((err) => {
               console.log(err);
-            }),
-        );
+            });
+        });
       });
-    };
-  }, []);
-
+    }
+    window.getReCaptchaToken = getCaptcha;
+  };
+});
+function App() {
   const [reload, forceReload] = useState();
   const [isBusy, setIsBusy] = useState(true);
   const reduxContext = useSelector((state) => {
@@ -116,6 +119,12 @@ function App() {
                     </Route>
                     <Route path="/drafts/:draftId">
                       <DraftDetail reduxContext={reduxContext} />
+                    </Route>
+                    <Route path="/posts" exact>
+                      <Redirect to="/"></Redirect>
+                    </Route>
+                    <Route path="/posts/:postId">
+                      <Post></Post>
                     </Route>
                     <Route path="/myposts" exact>
                       <MyPost reduxContext={reduxContext} />
