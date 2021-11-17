@@ -19,14 +19,14 @@ import DraftsPage from "./pages/draftsPages/DraftsPage";
 import DraftDetail from "./pages/DraftItem/DraftDetail";
 import MyPost from "./pages/myPostsPage/MyPost";
 import Post from "./pages/postPage/Post";
+import HomePage from "./pages/homePage/HomePage";
 
 global._ = _;
 
 // create Captcha to check bot
 document.addEventListener("DOMContentLoaded", function () {
   const script = document.createElement("script");
-  script.src =
-    "https://www.google.com/recaptcha/api.js?render=6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV";
+  script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_RECAPTCHA_SITEKEY}`;
   script.async = true;
   document.head.appendChild(script);
   script.onload = () => {
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return new Promise((res, rej) => {
         window.grecaptcha.ready(() => {
           window.grecaptcha
-            .execute("6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV", {
+            .execute(process.env.REACT_APP_RECAPTCHA_SITEKEY, {
               action: "submit",
             })
             .then((token) => {
@@ -87,7 +87,7 @@ function App() {
             <Suspense fallback={<Spinner></Spinner>}>
               <Switch>
                 <Route path="/" exact>
-                  <Redirect to="/"></Redirect>
+                  <HomePage></HomePage>
                 </Route>
                 <Route path="/login" exact>
                   {_.isEmpty(reduxContext) ? (

@@ -15,6 +15,7 @@
   .dropdown__item {
     padding: 1rem;
     background-color: #fcfcfd;
+    text-align: left;
     cursor: pointer;
     transition: all 0.2s linear;
   }

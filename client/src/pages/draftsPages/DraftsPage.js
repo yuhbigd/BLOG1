@@ -233,7 +233,7 @@ function DraftsPage() {
   return (
     <div className={classes["draft-page"]}>
       <TransitionGroup className={classes.container}>
-        <div>
+        <div className={classes["search-div"]}>
           <input
             type="text"
             name="text"

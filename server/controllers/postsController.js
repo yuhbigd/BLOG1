@@ -240,7 +240,7 @@ async function get_all_post(req, res) {
       }
     }
     const pageNum = parseInt(req.query.pageNum) - 1 || 0;
-    const numPerPage = parseInt(req.query.numPerPage) || 10;
+    const numPerPage = parseInt(req.query.numPerPage) || 12;
     const query = req.query;
     let orderBy = {};
     if (query.order) {

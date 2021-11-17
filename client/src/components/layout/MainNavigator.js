@@ -126,7 +126,7 @@ export default (props) => {
                     setMpSubMenu(!MpSubMenu);
                   }}
                 >
-                  My stuffs
+                  My stuff
                 </NavLink>
                 <div className={classes["bottom-line"]}></div>
                 {!isPageWide && (

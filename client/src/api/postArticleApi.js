@@ -62,7 +62,7 @@ export async function updateArticle({ id: slug, data }) {
   // server will return link to image
   return message;
 }
-export async function getPosts({ pageNum = 1, numPerPage = 10, searchString }) {
+export async function getPosts({ pageNum = 1, numPerPage = 12, searchString }) {
   if (!searchString) {
     searchString = "";
   }

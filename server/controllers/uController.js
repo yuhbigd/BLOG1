@@ -39,7 +39,7 @@ async function posts_get(req, res) {
     }
 
     const pageNum = parseInt(req.query.pageNum) - 1 || 0;
-    const numPerPage = parseInt(req.query.numPerPage) || 10;
+    const numPerPage = parseInt(req.query.numPerPage) || 12;
 
     const skip = pageNum * numPerPage;
     const articles = await Post.find({
