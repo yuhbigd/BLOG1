@@ -4,7 +4,9 @@ html {
   margin: 0;
   padding: 0;
 }
-
+.grecaptcha-badge {
+  visibility: hidden;
+}
 .App {
   position: absolute;
   background: #dad299; /* fallback for old browsers */

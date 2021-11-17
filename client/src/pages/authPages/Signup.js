@@ -32,11 +32,12 @@ function Signup(props) {
       setError("Your email is in incorrect format");
       return;
     }
-
+    const tokenCaptcha = await window.getReCaptchaToken;
     await sendRequest({
       email: email.current.value,
       password: passwordValue,
       name: name.current.value,
+      tokenCaptcha,
     });
   }
 

@@ -1,4 +1,5 @@
 export async function saveDraft(data) {
+  const tokenCaptcha = await window.getReCaptchaToken;
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(`${serverDomain}/drafts`, {
     method: "POST",

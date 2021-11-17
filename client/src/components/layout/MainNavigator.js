@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import logo from "./logo192.png";
 import useMediaQuery from "../../custom-hooks/use-media-query";
 import classes from "./MainNavigator.module.css";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -69,7 +70,7 @@ export default (props) => {
   return (
     <header className={classes.header}>
       <div className={classes.logo} onClick={logoClickHandle}>
-        <img src="./logo192.png" alt="Logo" />
+        <img src={logo} alt="Logo" />
       </div>
       {isPageWide && (
         <div>
@@ -87,20 +88,6 @@ export default (props) => {
           ></FaTimes>
         )}
         <ul className={classes["main-navigator"]}>
-          <li className={classes["main-navigator--item"]}>
-            <NavLink
-              to="/posts"
-              activeClassName={classes.active}
-              onClick={(event) => {
-                if (isPageWide) {
-                  setNavClassName(classes.nav + " " + classes.hide);
-                }
-              }}
-            >
-              Discover
-            </NavLink>
-            <div className={classes["bottom-line"]}></div>
-          </li>
           {_.isEmpty(reduxContext) && (
             <>
               <li className={classes["main-navigator--item"]}>
@@ -139,7 +126,7 @@ export default (props) => {
                     setMpSubMenu(!MpSubMenu);
                   }}
                 >
-                  My post
+                  My stuffs
                 </NavLink>
                 <div className={classes["bottom-line"]}></div>
                 {!isPageWide && (

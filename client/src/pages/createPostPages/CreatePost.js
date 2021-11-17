@@ -46,7 +46,7 @@ function CreatePost(props) {
       }
     }
   }, []);
-  // con phan public post chua lam :]
+  // public post
   const {
     sendRequest: sendArticleToServer,
     status: sendArticleStatus,

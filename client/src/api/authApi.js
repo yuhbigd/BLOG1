@@ -49,5 +49,6 @@ export async function getUserFromToken() {
     Object.assign(error, { statusCode: response.status });
     throw error;
   }
+
   return data;
 }

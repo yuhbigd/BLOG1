@@ -17,10 +17,36 @@ import MainContainter from "./components/layout/MainContainter";
 import CreatePost from "./pages/createPostPages/CreatePost";
 import DraftsPage from "./pages/draftsPages/DraftsPage";
 import DraftDetail from "./pages/DraftItem/DraftDetail";
+import MyPost from "./pages/myPostsPage/MyPost";
 
 global._ = _;
 
 function App() {
+  // create Captcha to check bot
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "https://www.google.com/recaptcha/api.js?render=6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV";
+    script.async = true;
+    document.head.appendChild(script);
+    script.onload = () => {
+      window.getReCaptchaToken = new Promise((res, rej) => {
+        window.grecaptcha.ready(() =>
+          window.grecaptcha
+            .execute("6LcKbjwdAAAAALb-ba92hR0KIT25bCfHafabslMV", {
+              action: "submit",
+            })
+            .then((token) => {
+              return res(token);
+            })
+            .catch((err) => {
+              console.log(err);
+            }),
+        );
+      });
+    };
+  }, []);
+
   const [reload, forceReload] = useState();
   const [isBusy, setIsBusy] = useState(true);
   const reduxContext = useSelector((state) => {
@@ -44,7 +70,7 @@ function App() {
     if (data != null && status == "completed") {
       addUserHandler(data.user);
     }
-    if (status == "completed") {
+    if (status === "completed") {
       setIsBusy(false);
     }
   }, [data, status]);
@@ -90,6 +116,12 @@ function App() {
                     </Route>
                     <Route path="/drafts/:draftId">
                       <DraftDetail reduxContext={reduxContext} />
+                    </Route>
+                    <Route path="/myposts" exact>
+                      <MyPost reduxContext={reduxContext} />
+                    </Route>
+                    <Route path="/myposts/:postId">
+                      <MyPost reduxContext={reduxContext} />
                     </Route>
                     <Redirect to="/"></Redirect>
                   </Switch>

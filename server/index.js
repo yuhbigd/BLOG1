@@ -6,6 +6,10 @@ const accountRouter = require("./routers/accountRouter");
 const postsRouter = require("./routers/postsRouter");
 const draftsRouter = require("./routers/draftsRouter");
 const userRouter = require("./routers/uRouter");
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
+global.fetch = fetch;
 const _ = require("lodash");
 const cors = require("cors");
 const { checkUser } = require("./middlewares/authMiddleware");
@@ -36,7 +40,6 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-
 app.use("/", authRouter.router);
 app.use("/account", [checkUser], accountRouter.router);
 app.use("/posts", [checkUser], postsRouter.router);

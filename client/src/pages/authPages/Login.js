@@ -27,6 +27,7 @@ function Login(props) {
 
   async function submitHandle(event) {
     event.preventDefault();
+    const tokenCaptcha = await window.getReCaptchaToken;
     const emailValue = email.current.value;
     const passwordValue = password.current.value;
 
@@ -39,6 +40,7 @@ function Login(props) {
     await sendRequest({
       email: email.current.value,
       password: passwordValue,
+      tokenCaptcha,
     });
   }
 
