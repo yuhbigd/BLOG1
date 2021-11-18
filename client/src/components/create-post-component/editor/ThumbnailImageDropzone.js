@@ -37,7 +37,7 @@ function ThumbnailImageDropzone(props) {
   // for save draft
   useEffect(() => {
     if (props.thumbnailImg) {
-      if (props.thumbnailImg.includes(storageDomain,0)) {
+      if (props.thumbnailImg.includes(storageDomain, 0)) {
         setShowDrop("From url");
         setPreview({
           html: (
@@ -60,6 +60,7 @@ function ThumbnailImageDropzone(props) {
           ),
           src: props.thumbnailImg,
         });
+        props.thumbnailRef.current = props.thumbnailImg;
       }
     }
   }, []);

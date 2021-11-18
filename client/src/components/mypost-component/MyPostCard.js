@@ -1,11 +1,33 @@
 import React from "react";
+import { FaTimes } from "react-icons/fa";
 import { Link, useHistory } from "react-router-dom";
-import classes from "./PostCard.module.css";
+import classes from "./MyPostCard.module.css";
 
-function PostCard(props) {
+function MyPostCard(props) {
   const history = useHistory();
   return (
     <Link className={classes["card"]} to={"/posts/" + props.item.slugUrl}>
+      <button
+        className={classes["delete-button"]}
+        title={"Delete this post"}
+        onClick={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          props.onDelete();
+        }}
+      >
+        <FaTimes />
+      </button>
+      <button
+        onClick={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          history.push(`/myposts/${props.item.slugUrl}`);
+        }}
+        className={classes["update-button"]}
+      >
+        Update post
+      </button>
       <div className={classes["card__header"]}>
         <img
           src={props.item.thumbnailImage}
@@ -51,4 +73,4 @@ function PostCard(props) {
   );
 }
 
-export default PostCard;
+export default MyPostCard;

@@ -40,3 +40,18 @@
   border-radius: 15px;
   background-color: transparent;
 }
+.order-div > div + div {
+  margin-left: 1rem;
+}
+@media only screen and (max-width: 600px) {
+  .homePage-config {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+@media only screen and (max-width: 320px) {
+  .order-div > div + div {
+    margin-left: 0;
+  }
+}

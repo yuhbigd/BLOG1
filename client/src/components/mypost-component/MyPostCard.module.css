@@ -15,6 +15,7 @@
   border-radius: 1em;
   background: #ece9e6;
   background: linear-gradient(to right, #ffffff, #ece9e6);
+  position: relative;
 }
 .card__header {
   overflow: hidden;
@@ -37,6 +38,12 @@
 .card__body h4 {
   font-size: 1.5rem;
   text-transform: capitalize;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 .user h5:hover {
   color: rgb(42, 42, 143);
@@ -77,4 +84,43 @@
 .post__info {
   display: flex;
   flex-direction: column;
+}
+.delete-button {
+  position: absolute;
+
+  width: 30px;
+  height: 30px;
+  top: 10px;
+  right: 10px;
+  font-size: 1.1rem;
+  z-index: 5;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  display: none;
+}
+.card:hover .delete-button {
+  display: flex;
+}
+.update-button {
+  position: absolute;
+  bottom: 19%;
+  left: 10px;
+  z-index: 5;
+  padding: 0.25rem;
+  outline: none;
+  border: none;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.update-button:hover {
+  background-color: #181e39;
+  color: #ecf0f7;
 }

@@ -259,6 +259,7 @@ const Editor = React.forwardRef((props, ref) => {
     getJSONContent: () => editor.getJSON(),
     deleteRedundantImagesOnSave: savePost,
     thumbnailImage: () => thumbnailRef.current,
+    getAllImages: () => Array.from(allImageRef.current),
   }));
   return (
     <div style={{ width: "100%", maxWidth: "100%" }}>

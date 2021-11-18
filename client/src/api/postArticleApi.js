@@ -42,7 +42,7 @@ export async function deleteArticle(slug) {
   // server will return link to image
   return data;
 }
-export async function updateArticle({ id: slug, data }) {
+export async function updateArticle({ slug: slug, data }) {
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(`${serverDomain}/posts/${slug}`, {
     method: "PUT",
@@ -62,13 +62,19 @@ export async function updateArticle({ id: slug, data }) {
   // server will return link to image
   return message;
 }
-export async function getPosts({ pageNum = 1, numPerPage = 12, searchString }) {
+export async function getPosts({
+  pageNum = 1,
+  numPerPage = 12,
+  searchString,
+  order = "_id",
+  direction = "desc",
+}) {
   if (!searchString) {
     searchString = "";
   }
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(
-    `${serverDomain}/posts?pageNum=${pageNum}&numPerPage=${numPerPage}&searchString=${searchString}`,
+    `${serverDomain}/posts?pageNum=${pageNum}&numPerPage=${numPerPage}&searchString=${searchString}&order=${order}&direction=${direction}`,
     {
       credentials: "include",
     },
@@ -114,16 +120,19 @@ export async function getSinglePost(slug) {
   return data;
 }
 export async function getMyPosts({
+  userId,
   pageNum = 1,
-  numPerPage = 10,
+  numPerPage = 12,
   searchString,
+  order = "_id",
+  direction = "desc",
 }) {
   if (!searchString) {
     searchString = "";
   }
   const serverDomain = process.env.REACT_APP_BASE_URL;
   const response = await fetch(
-    `${serverDomain}/u/posts?pageNum=${pageNum}&numPerPage=${numPerPage}&searchString=${searchString}`,
+    `${serverDomain}/u/${userId}?pageNum=${pageNum}&numPerPage=${numPerPage}&searchString=${searchString}&order=${order}&direction=${direction}`,
     {
       credentials: "include",
     },
@@ -136,13 +145,13 @@ export async function getMyPosts({
   }
   return data;
 }
-export async function getNumberOfMyPosts(searchString) {
+export async function getNumberOfMyPosts({ userId, searchString }) {
   const serverDomain = process.env.REACT_APP_BASE_URL;
   if (!searchString) {
     searchString = "";
   }
   const response = await fetch(
-    `${serverDomain}/u/posts?isCount=1&searchString=${searchString}`,
+    `${serverDomain}/u/${userId}?isCount=1&searchString=${searchString}`,
     {
       credentials: "include",
     },

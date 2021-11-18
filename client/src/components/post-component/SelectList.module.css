@@ -1,0 +1,56 @@
+.container {
+  position: relative;
+  cursor: pointer;
+  z-index: 3;
+  display: inline-block;
+}
+.title {
+  border: 1px black solid;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+.ul_list {
+  position: absolute;
+  margin-top: 5px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100%;
+}
+.ul_list > li {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ul_list > li {
+  background-color: #e2e9fc;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.ul_list > li:hover {
+  background-color: #afb6c8;
+}
+.MyClassEnter {
+  opacity: 0;
+}
+.MyClassEnterActive {
+  opacity: 1;
+  transition: all 300ms ease-in-out;
+}
+.MyClassEnterDone {
+  opacity: 1;
+  transition: all 300ms linear;
+}
+
+.MyClassExitActive {
+  opacity: 0;
+  transition: all 200ms ease-in-out;
+}
+.MyClassExit {
+  opacity: 0;
+}
+

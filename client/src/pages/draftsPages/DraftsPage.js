@@ -89,12 +89,12 @@ function DraftsPage() {
   const [onDelete, setOnDelete] = useState(false);
   // run only the first time after component mount
   const isFirstTime = useRef(true);
-  const isComponentMount = useMountedState();
+  const isMount = useMountedState();
   const {
     sendRequest: getDraftsFromServer,
     status: getDraftsStatus,
     data: allDraftsFromServer,
-    error: DraftsError,
+    error: draftError,
   } = useHttp(getDrafts);
   const { sendRequest: deleteDraftFromServer, data: deletedDraftFromServer } =
     useHttp(deleteDraft);
@@ -106,12 +106,14 @@ function DraftsPage() {
     error: deleteRedundantImageError,
   } = useHttp(removeImagesRedundancy);
   useUpdateEffect(() => {
-    if (isComponentMount()) {
-      let images = redundantImage(
-        deletedDraftFromServer.draft.contentJson.content,
-        deletedDraftFromServer.draft.thumbnailImage,
-      );
-      deleteRedundantImage({ images: images });
+    if (isMount()) {
+      if (deletedDraftFromServer) {
+        let images = redundantImage(
+          deletedDraftFromServer.draft.contentJson.content,
+          deletedDraftFromServer.draft.thumbnailImage,
+        );
+        deleteRedundantImage({ images: images });
+      }
     }
   }, [deletedDraftFromServer]);
   const [draftsData, dispatchDrafts] = useReducer(draftsReducer, {
@@ -126,7 +128,7 @@ function DraftsPage() {
     (async () => {
       //get and set number of draft
       const number = await getNumberOfDrafts(query.get("search"));
-      if (isComponentMount()) {
+      if (isMount()) {
         dispatchDrafts({
           type: draftsReducerCase.setNumberOfDrafts,
           numberOfDrafts: number.count,
@@ -168,7 +170,7 @@ function DraftsPage() {
     (async () => {
       //get and set number of draft
       const number = await getNumberOfDrafts(query.get("search"));
-      if (isComponentMount()) {
+      if (isMount()) {
         isChangeQuery.current = true;
         dispatchDrafts({
           type: draftsReducerCase.setNumberOfDrafts,
@@ -198,7 +200,7 @@ function DraftsPage() {
   }
 
   function updateDataOnDelete() {
-    if (isComponentMount()) {
+    if (isMount()) {
       if (draftsData.data.length > 0) {
         //change page but not delete all the data -> not create blank page
         getDraftsFromServer({
@@ -207,7 +209,7 @@ function DraftsPage() {
           searchString: query.get("search"),
         });
       } else {
-        if (draftsData.pageNumber > 1 && isComponentMount()) {
+        if (draftsData.pageNumber > 1 && isMount()) {
           dispatchDrafts({
             type: draftsReducerCase.changePage,
             pageNumber: draftsData.pageNumber - 1,
@@ -218,8 +220,8 @@ function DraftsPage() {
   }
   //set data when server response
   useEffect(() => {
-    if (getDraftsStatus === "completed" && !DraftsError) {
-      if (isComponentMount()) {
+    if (getDraftsStatus === "completed" && !draftError) {
+      if (isMount()) {
         dispatchDrafts({
           type: draftsReducerCase.setData,
           data: allDraftsFromServer.drafts,
@@ -228,7 +230,7 @@ function DraftsPage() {
         isChangeQuery.current = false;
       }
     }
-  }, [allDraftsFromServer, getDraftsStatus, DraftsError]);
+  }, [allDraftsFromServer, getDraftsStatus, draftError]);
 
   return (
     <div className={classes["draft-page"]}>
@@ -283,7 +285,7 @@ function DraftsPage() {
                 close={async () => {
                   if (!onDelete) {
                     await deleteDraftFromServer(item._id);
-                    if (isComponentMount()) {
+                    if (isMount()) {
                       dispatchDrafts({
                         type: draftsReducerCase.removeDraft,
                         _id: item._id,

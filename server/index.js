@@ -42,9 +42,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use("/", authRouter.router);
 app.use("/account", [checkUser], accountRouter.router);
-app.use("/posts", [checkUser], postsRouter.router);
+app.use("/posts", postsRouter.router);
 app.use("/drafts", [checkUser], draftsRouter.router);
-app.use("/u", [checkUser], userRouter.router);
+app.use("/u", userRouter.router);
 app.listen(3001, () => {
   console.log("server is listen on port 3001");
 });

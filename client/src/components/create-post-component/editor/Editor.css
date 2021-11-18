@@ -89,6 +89,7 @@ a:hover {
   display: block;
   position: relative;
   padding: 1rem;
+  padding-bottom: 2rem;
   width: calc(100%-2rem);
   max-width: 90vw;
   min-height: 100px;

@@ -5,12 +5,21 @@ import { updateDraft } from "../../api/draftsApi";
 import { publicArticle } from "../../api/postArticleApi";
 import ConfirmDraft from "../../components/create-post-component/ConfirmDraft";
 import Editor from "../../components/create-post-component/editor/Editor";
+import AlertComponent from "../../components/sub-components/AlertComponent";
 import ErrorComponent from "../../components/sub-components/ErrorComponent";
 import Modal from "../../components/sub-components/Modal";
 import Spinner from "../../components/sub-components/Spinner";
 import useHttp from "../../custom-hooks/use-http";
 import classes from "./CreatePost.module.css";
 function CreatePost(props) {
+  //public alert
+  const [showAlert, setShowAlert] = useState(false);
+  function hideAlertComponent(event) {
+    setShowAlert(false);
+  }
+  function showAlertComponent(event) {
+    setShowAlert(true);
+  }
   const history = useHistory();
   const isMount = useMountedState();
   const titleRef = useRef();
@@ -120,12 +129,7 @@ function CreatePost(props) {
       <div className={classes["button-div"]}>
         <button
           className={classes["public-button"]}
-          onClick={async () => {
-            const sendData = sendArticle();
-            const deleteImages =
-              editorRef.current.deleteRedundantImagesOnSave();
-            await Promise.all([sendData, deleteImages]);
-          }}
+          onClick={showAlertComponent}
         >
           Public this article
         </button>
@@ -162,6 +166,36 @@ function CreatePost(props) {
         ></ConfirmDraft>
       )}
       {errorState}
+      {showAlert && (
+        <Modal
+          clickHandle={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            hideAlertComponent();
+          }}
+        >
+          <AlertComponent
+            title={"Are you sure?"}
+            message={"You are about to public this post"}
+            clickHandle={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              hideAlertComponent();
+            }}
+            sureHandle={async (event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              const sendData = sendArticle();
+              const deleteImages =
+                editorRef.current.deleteRedundantImagesOnSave();
+              await Promise.all([sendData, deleteImages]);
+              if (isMount()) {
+                hideAlertComponent();
+              }
+            }}
+          ></AlertComponent>
+        </Modal>
+      )}
     </div>
   );
 }

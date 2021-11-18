@@ -21,6 +21,8 @@ async function posts_get(req, res) {
         return;
       }
     }
+    const pageNum = parseInt(req.query.pageNum) - 1 || 0;
+    const numPerPage = parseInt(req.query.numPerPage) || 12;
     const query = req.query;
     let orderBy = {};
     if (query.order) {
@@ -37,10 +39,6 @@ async function posts_get(req, res) {
     if (_.isEmpty(orderBy) || !orderBy._id) {
       orderBy._id = -1;
     }
-
-    const pageNum = parseInt(req.query.pageNum) - 1 || 0;
-    const numPerPage = parseInt(req.query.numPerPage) || 12;
-
     const skip = pageNum * numPerPage;
     const articles = await Post.find({
       $and: [
@@ -48,6 +46,7 @@ async function posts_get(req, res) {
         { title: { $regex: ".*" + searchString + ".*", $options: "i" } },
       ],
     })
+      .populate({ path: "author", select: { _id: 1, avatar: 1, name: 1 } })
       .sort(orderBy)
       .skip(skip)
       .limit(numPerPage)
@@ -57,6 +56,7 @@ async function posts_get(req, res) {
         thumbnailImage: 1,
         slugUrl: 1,
         totalViews: 1,
+        userId: 1,
       })
       .exec();
     if (!articles) {

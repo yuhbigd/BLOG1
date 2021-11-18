@@ -214,6 +214,7 @@ async function post_delete(req, res) {
     if (!article) {
       throw new Error("No document found");
     }
+
     res.status(200).json({
       article: article,
     });
@@ -259,9 +260,9 @@ async function get_all_post(req, res) {
     }
     const skip = pageNum * numPerPage;
     const articles = await Post.find({
-      name: { $regex: ".*" + searchString + ".*", $options: "i" },
+      title: { $regex: ".*" + searchString + ".*", $options: "i" },
     })
-      .populate({ path: "author", select: { _id: 0, avatar: 1 } })
+      .populate({ path: "author", select: { _id: 1, avatar: 1, name: 1 } })
       .sort(orderBy)
       .skip(skip)
       .limit(numPerPage)
@@ -302,13 +303,19 @@ async function get_post(req, res) {
     }
     const article = await Post.findOne({
       $and: [{ slugUrl: slug }],
-    }).select({ slugUrl: 1, title: 1, thumbnailImage: 1, contentHtml: 1 });
+    }).select({
+      slugUrl: 1,
+      title: 1,
+      thumbnailImage: 1,
+      contentHtml: 1,
+      contentJson: 1,
+    });
     if (!article) {
       throw new Error("No document found");
     }
     await Post.addView(article._id);
     res.status(200).json({
-      data: article,
+      article: article,
     });
   } catch (error) {
     res.status(404).json({
@@ -319,7 +326,10 @@ async function get_post(req, res) {
 async function comment_post(req, res) {
   try {
     const slug = req.params.slug;
-    const userId = req.user._id;
+    let userId = req.body.data._id;
+    if (!userId) {
+      userId = "61951804739b2253ce58adbe";
+    }
     if (!slug) {
       throw new Error("data can not be emptied");
     }

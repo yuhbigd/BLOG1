@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import { useLocation, useParams } from "react-router";
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 function Post() {
-  return (
-    <div>
-      
-    </div>
-  )
+  const params = useParams();
+  // console.log(params.slugUrl);
+  return <div></div>;
 }
 
-export default Post
+export default Post;

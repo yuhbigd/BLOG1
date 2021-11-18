@@ -20,6 +20,7 @@ import DraftDetail from "./pages/DraftItem/DraftDetail";
 import MyPost from "./pages/myPostsPage/MyPost";
 import Post from "./pages/postPage/Post";
 import HomePage from "./pages/homePage/HomePage";
+import MyPostDetail from "./pages/MyPostDetail/MyPostDetail";
 
 global._ = _;
 
@@ -89,6 +90,18 @@ function App() {
                 <Route path="/" exact>
                   <HomePage></HomePage>
                 </Route>
+                <Route path="/posts" exact>
+                  <Redirect to="/"></Redirect>
+                </Route>
+                <Route path="/posts/:slugUrl">
+                  <Post></Post>
+                </Route>
+                <Route path="/u" exact>
+                  <Redirect to="/"></Redirect>
+                </Route>
+                <Route path="/u/:userId">
+                  <Redirect to="/"></Redirect>
+                </Route>
                 <Route path="/login" exact>
                   {_.isEmpty(reduxContext) ? (
                     <Login></Login>
@@ -120,17 +133,12 @@ function App() {
                     <Route path="/drafts/:draftId">
                       <DraftDetail reduxContext={reduxContext} />
                     </Route>
-                    <Route path="/posts" exact>
-                      <Redirect to="/"></Redirect>
-                    </Route>
-                    <Route path="/posts/:postId">
-                      <Post></Post>
-                    </Route>
+
                     <Route path="/myposts" exact>
                       <MyPost reduxContext={reduxContext} />
                     </Route>
-                    <Route path="/myposts/:postId">
-                      <MyPost reduxContext={reduxContext} />
+                    <Route path="/myposts/:slugUrl">
+                      <MyPostDetail reduxContext={reduxContext} />
                     </Route>
                     <Redirect to="/"></Redirect>
                   </Switch>
