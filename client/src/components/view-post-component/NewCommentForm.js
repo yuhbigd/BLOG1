@@ -67,6 +67,7 @@ function NewCommentForm(props) {
           </Modal>,
         );
       }
+      commentAreaRef.current.value = "";
     }
   }, [commentFromServer, sendCommentStatus]);
   return (

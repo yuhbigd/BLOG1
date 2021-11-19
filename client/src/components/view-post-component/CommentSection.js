@@ -47,7 +47,6 @@ function CommentSection(props) {
       if (data.length === allComments.current.length) {
         setShowMoreButton(false);
       }
-      console.log(data);
       setComments({ data: data });
     }
   }
@@ -65,7 +64,7 @@ function CommentSection(props) {
       <div className={classes["comments-container"]}>
         {comments.data.length > 0 &&
           comments.data.map((item) => {
-            return <CommentBox item={item} />;
+            return <CommentBox key={item._id} item={item} />;
           })}
       </div>
       {showMoreButton && (
@@ -73,7 +72,7 @@ function CommentSection(props) {
           onClick={() => {
             appendComments(comments.data.length, comments.data.length + 10);
           }}
-          className = {classes["more-button"]}
+          className={classes["more-button"]}
         >
           More
         </button>

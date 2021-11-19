@@ -16,11 +16,11 @@ import Account from "./pages/accountSettingPages/Account";
 import MainContainter from "./components/layout/MainContainter";
 import CreatePost from "./pages/createPostPages/CreatePost";
 import DraftsPage from "./pages/draftsPages/DraftsPage";
-import DraftDetail from "./pages/DraftItem/DraftDetail";
+import DraftDetail from "./pages/draftItem/DraftDetail";
 import MyPost from "./pages/myPostsPage/MyPost";
 import Post from "./pages/postPage/Post";
 import HomePage from "./pages/homePage/HomePage";
-import MyPostDetail from "./pages/MyPostDetail/MyPostDetail";
+import MyPostDetail from "./pages/myPostDetail/MyPostDetail";
 import UserPosts from "./pages/userPosts/UserPosts";
 
 global._ = _;

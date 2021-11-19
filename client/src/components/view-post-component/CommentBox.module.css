@@ -1,8 +1,8 @@
-
 .avatar-container {
   position: relative;
 }
 .user__image {
+  cursor: pointer;
   position: sticky;
   display: block;
   margin: auto 0;
