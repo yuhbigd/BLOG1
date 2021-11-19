@@ -11,7 +11,6 @@
   flex-direction: column;
   width: clamp(16rem, calc(250px + 5vw), 25rem);
   box-shadow: 0 0.1rem 1rem rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   border-radius: 1em;
   background: #ece9e6;
   background: linear-gradient(to right, #ffffff, #ece9e6);
@@ -73,7 +72,19 @@
   width: 40px;
   height: 40px;
 }
-
+.user__avatar--words {
+  display: block;
+  margin: auto 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+}
 .user__info {
   display: inline-block;
 }
@@ -87,7 +98,6 @@
 }
 .delete-button {
   position: absolute;
-
   width: 30px;
   height: 30px;
   top: 10px;
@@ -123,4 +133,9 @@
 .update-button:hover {
   background-color: #181e39;
   color: #ecf0f7;
+}
+@media only screen and (max-width: 600px) {
+  .update-button {
+    bottom: 18%;
+  }
 }

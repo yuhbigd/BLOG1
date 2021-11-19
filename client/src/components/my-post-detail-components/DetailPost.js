@@ -38,9 +38,6 @@ function DetailPost(props) {
     };
     return sendPostToServer({ slug: props.slug, data });
   }
-  async function deletePost() {
-    return deletePostFromServer(props.slug);
-  }
   function updateAlertComponent(event) {
     const component = (
       <Modal

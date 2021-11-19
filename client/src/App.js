@@ -21,6 +21,7 @@ import MyPost from "./pages/myPostsPage/MyPost";
 import Post from "./pages/postPage/Post";
 import HomePage from "./pages/homePage/HomePage";
 import MyPostDetail from "./pages/MyPostDetail/MyPostDetail";
+import UserPosts from "./pages/userPosts/UserPosts";
 
 global._ = _;
 
@@ -100,7 +101,7 @@ function App() {
                   <Redirect to="/"></Redirect>
                 </Route>
                 <Route path="/u/:userId">
-                  <Redirect to="/"></Redirect>
+                  <UserPosts />
                 </Route>
                 <Route path="/login" exact>
                   {_.isEmpty(reduxContext) ? (

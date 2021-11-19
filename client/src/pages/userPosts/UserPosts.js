@@ -1,16 +1,21 @@
 import React, { useEffect, useState, useReducer, useRef } from "react";
-import PostCard from "../../components/post-component/PostCard";
 import PaginationBar from "../../components/sub-components/PaginationBar";
-import classes from "./HomePage.module.css";
+import classes from "../homePage/HomePage.module.css";
 import { FaSearch } from "react-icons/fa";
 import SelectList from "../../components/post-component/SelectList";
-import { getNumberOfPosts, getPosts } from "../../api/postArticleApi";
+import {
+  deleteArticle,
+  getUserPosts,
+  getNumberOfUserPosts,
+} from "../../api/postArticleApi";
 import { useMountedState } from "react-use";
 import { useUpdateEffect } from "react-use";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import useHttp from "../../custom-hooks/use-http";
+import MyPostCard from "../../components/mypost-component/MyPostCard";
+import { removeImagesRedundancy } from "../../api/editorApi";
 import Spinner from "../../components/sub-components/Spinner";
-
+import PostCard from "../../components/post-component/PostCard";
 const postsReducerCase = {
   changePage: "changePage",
   setData: "setData",
@@ -52,6 +57,16 @@ function postsReducer(state, action) {
         ...state,
         sortOrder: action.sortOrder,
       };
+    case postsReducerCase.removePost:
+      let data = [...state.data];
+      data = data.filter((post) => {
+        return post._id !== action._id;
+      });
+      return {
+        ...state,
+        data: data,
+        numberOfPosts: state.numberOfPosts - 1,
+      };
   }
   return state;
 }
@@ -61,11 +76,35 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-function HomePage() {
+function redundantImage(content, thumbnailImg) {
+  let imageArray = content
+    .filter((item) => {
+      if (item.type === "image") {
+        return true;
+      }
+    })
+    .map((item) => {
+      return item.attrs.src;
+    })
+    .filter((item) => {
+      return item.includes(process.env.REACT_APP_STORAGE_URL, 0);
+    });
+  if (thumbnailImg !== "") {
+    if (thumbnailImg.includes(process.env.REACT_APP_STORAGE_URL, 0)) {
+      imageArray.push(thumbnailImg);
+    }
+  }
+  imageArray = imageArray.map((item) => {
+    return item.split(process.env.REACT_APP_STORAGE_URL)[1];
+  });
+  return imageArray;
+}
+function UserPosts(props) {
+  const params = useParams();
+  const userId = params.userId;
   let query = useQuery();
   const searchInput = useRef();
   const history = useHistory();
-  // const isChangeQuery = useRef(false);
   const [isFirstTime, setIsFirstTime] = useState(true);
   const isMount = useMountedState();
   // post api
@@ -74,7 +113,8 @@ function HomePage() {
     status: getPostsStatus,
     data: allPostsFromServer,
     error: postsError,
-  } = useHttp(getPosts);
+  } = useHttp(getUserPosts);
+
   //post reducer
   const [postsData, dispatchPosts] = useReducer(postsReducer, {
     data: [],
@@ -91,7 +131,10 @@ function HomePage() {
       //get and set number of post
       let number;
       try {
-        number = await getNumberOfPosts(query.get("search"));
+        number = await getNumberOfUserPosts({
+          userId,
+          searchString: query.get("search"),
+        });
       } catch (err) {
         number = { count: 0 };
       }
@@ -107,6 +150,7 @@ function HomePage() {
   useUpdateEffect(() => {
     if (postsData.numberOfPosts > 0) {
       getPostsFromServer({
+        userId: userId,
         pageNum: postsData.pageNumber,
         numPerPage: postsData.numPerPage,
         searchString: query.get("search"),
@@ -118,16 +162,19 @@ function HomePage() {
 
   // get data on component mount
   useUpdateEffect(() => {
-    if (isFirstTime && isMount()) {
-      setIsFirstTime(false);
-      if (postsData.numberOfPosts > 0) {
-        getPostsFromServer({
-          pageNum: postsData.pageNumber,
-          numPerPage: postsData.numPerPage,
-          searchString: query.get("search"),
-          order: postsData.sortBy,
-          direction: postsData.sortOrder,
-        });
+    if (isMount()) {
+      if (isFirstTime) {
+        setIsFirstTime(false);
+        if (postsData.numberOfPosts > 0) {
+          getPostsFromServer({
+            userId: userId,
+            pageNum: postsData.pageNumber,
+            numPerPage: postsData.numPerPage,
+            searchString: query.get("search"),
+            order: postsData.sortBy,
+            direction: postsData.sortOrder,
+          });
+        }
       }
     }
   }, [postsData.numberOfPosts]);
@@ -138,12 +185,14 @@ function HomePage() {
       //get and set number of post
       let number;
       try {
-        number = await getNumberOfPosts(query.get("search"));
+        number = await getNumberOfUserPosts({
+          userId,
+          searchString: query.get("search"),
+        });
       } catch (err) {
         number = { count: 0 };
       }
       if (isMount()) {
-        // isChangeQuery.current = true;
         dispatchPosts({
           type: postsReducerCase.setNumberOfPosts,
           numberOfPosts: number.count,
@@ -155,6 +204,7 @@ function HomePage() {
           } else {
             dispatchPosts({ type: postsReducerCase.setData, data: [] });
             getPostsFromServer({
+              userId: userId,
               pageNum: 1,
               numPerPage: postsData.numPerPage,
               searchString: query.get("search"),
@@ -178,6 +228,7 @@ function HomePage() {
         } else {
           dispatchPosts({ type: postsReducerCase.setData, data: [] });
           getPostsFromServer({
+            userId: userId,
             pageNum: 1,
             numPerPage: postsData.numPerPage,
             searchString: query.get("search"),
@@ -195,6 +246,7 @@ function HomePage() {
     dispatchPosts({ type: postsReducerCase.setData, data: [] });
     dispatchPosts({ type: postsReducerCase.changePage, pageNumber: page });
   }
+
   //set data when server response
   useUpdateEffect(() => {
     if (getPostsStatus === "completed" && !postsError) {
@@ -205,6 +257,8 @@ function HomePage() {
         });
       }
     } else if (postsError) {
+      alert(postsError.message);
+      history.push("/");
     }
   }, [allPostsFromServer, getPostsStatus, postsError]);
 
@@ -309,4 +363,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default UserPosts;

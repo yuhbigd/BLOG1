@@ -2,11 +2,20 @@
 .ProseMirror > * {
   color: black;
 }
-a:hover {
+
+.my-editor a,
+.my-editor a:visited {
+  text-decoration: none;
+  position: relative;
+  color: #1866d1;
+}
+
+.my-editor a:hover {
   cursor: pointer;
 }
-.my-custom-blockquote {
-  font-size: 1.3rem;
+
+.my-editor .my-custom-blockquote {
+  font-size: 1.3em;
   width: 60%;
   margin: 50px auto;
   font-family: Open Sans;
@@ -20,7 +29,7 @@ a:hover {
   background: #ededed;
 }
 
-.my-custom-blockquote::before {
+.my-editor .my-custom-blockquote::before {
   font-family: Arial;
   content: "\201C";
   color: #78c0a8;
@@ -35,7 +44,7 @@ a:hover {
 }
 
 .my-custom-blockquote > h3 {
-  font-size: 1.3rem;
+  font-size: 1.3em;
   display: block;
   color: #333333;
   font-style: normal;
@@ -43,7 +52,7 @@ a:hover {
   margin-top: 1em;
   text-align: right;
 }
-.my-image-class {
+.my-editor .my-image-class {
   display: block;
   margin: 0 auto;
   width: 100%;
@@ -53,21 +62,21 @@ a:hover {
 .my-image-class.ProseMirror-selectednode {
   outline: 3px solid #68cef8;
 }
-.image-small {
+.my-editor .image-small {
   min-width: 10%;
   max-width: 35%;
 }
-.image-medium {
+.my-editor .image-medium {
   min-width: 35%;
   max-width: 55%;
   max-height: 400px;
 }
-.image-large {
+.my-editor .image-large {
   min-width: 75%;
   max-height: 500px;
   max-width: 100%;
 }
-.my-custom-horizontal-rule {
+.my-editor .my-custom-horizontal-rule {
   width: 100%;
   display: block;
   margin: 0 auto;
@@ -79,30 +88,25 @@ a:hover {
   margin-top: 0.75em;
 }
 .my-editor p {
-  max-width: 90vw;
-  overflow-wrap: break-word;
-  line-break: strict;
-  word-break: break-all;
-  white-space: normal;
+  line-break: auto;
 }
 .my-editor {
   display: block;
   position: relative;
-  padding: 1rem;
-  padding-bottom: 2rem;
-  width: calc(100%-2rem);
+  padding: 1em;
+  padding-bottom: 2em;
+  width: calc(100%-2em);
   max-width: 90vw;
   min-height: 100px;
   margin: 0 auto;
-  overflow-wrap: break-word;
-  line-break: strict;
+  line-break: auto;
 }
 .my-editor:focus {
   outline: none;
 }
 .ProseMirror ul,
 .ProseMirror ol {
-  padding: 0 1rem;
+  padding: 0 1em;
 }
 
 .ProseMirror h1,
@@ -123,8 +127,8 @@ a:hover {
   background: #0d0d0d;
   color: #fff;
   font-family: "JetBrainsMono", monospace;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  padding: 0.75em 1em;
+  border-radius: 0.5em;
   white-space: pre-wrap; /* Since CSS 2.1 */
   white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
   white-space: -pre-wrap; /* Opera 4-6 */
@@ -137,13 +141,13 @@ a:hover {
   padding: 0;
   background: none;
   width: 100%;
-  font-size: 0.8rem;
+  font-size: 0.8em;
 }
 
 .ProseMirror hr {
   border: none;
   border-top: 2px solid rgba(#0d0d0d, 0.1);
-  margin: 2rem 0;
+  margin: 2em 0;
 }
 button.is-editor-active {
   color: red;
@@ -151,15 +155,17 @@ button.is-editor-active {
 @media only screen and (max-width: 600px) {
   .my-editor {
     width: 82vw;
+    font-size: small;
   }
 }
+
 .editor-container {
   width: 100%;
 }
 .editor-container--subcontainer {
   border: 2px solid #b7c2d5;
   border-top: 0px;
-  border-radius: 0 0 0.75rem 0.75rem;
+  border-radius: 0 0 0.75em 0.75em;
 }
 .bubble-menu {
   z-index: 2 !important;
@@ -168,7 +174,7 @@ button.is-editor-active {
   outline: none;
   border: none;
   color: #565d63;
-  font-size: 1rem;
+  font-size: 1em;
   padding: 5px;
   background-color: #ccc;
 }

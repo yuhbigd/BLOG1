@@ -303,13 +303,16 @@ async function get_post(req, res) {
     }
     const article = await Post.findOne({
       $and: [{ slugUrl: slug }],
-    }).select({
-      slugUrl: 1,
-      title: 1,
-      thumbnailImage: 1,
-      contentHtml: 1,
-      contentJson: 1,
-    });
+    })
+      .populate({ path: "author", select: { _id: 1, avatar: 1, name: 1 } })
+      .select({
+        slugUrl: 1,
+        title: 1,
+        thumbnailImage: 1,
+        contentHtml: 1,
+        contentJson: 1,
+        createAt: 1,
+      });
     if (!article) {
       throw new Error("No document found");
     }
@@ -326,8 +329,10 @@ async function get_post(req, res) {
 async function comment_post(req, res) {
   try {
     const slug = req.params.slug;
-    let userId = req.body.data._id;
-    if (!userId) {
+    let userId;
+    if (req.user) {
+      userId = req.user._id;
+    } else {
       userId = "61951804739b2253ce58adbe";
     }
     if (!slug) {
@@ -336,7 +341,20 @@ async function comment_post(req, res) {
     const article = await Post.findOneAndUpdate(
       { slugUrl: slug },
       {
-        $push: { comments: { text: req.body.data.text, author: userId } },
+        $push: {
+          comments: {
+            $each: [
+              {
+                text: req.body.data.text,
+                author: userId,
+                createAt: new Date(
+                  new Date().getTime() - new Date().getTimezoneOffset() * 60000,
+                ),
+              },
+            ],
+            $position: 0,
+          },
+        },
       },
       { new: true },
     );
@@ -358,14 +376,34 @@ async function comments_get(req, res) {
     if (!slug) {
       throw new Error("data can not be emptied");
     }
+    const isCount = req.query.isCount;
+    if (isCount) {
+      if (isCount === "1") {
+        const countDocument = await Post.findOne({
+          slugUrl: slug,
+        }).exec();
+
+        res.status(200).json({
+          count: countDocument.comments.length,
+        });
+        return;
+      }
+    }
+
     const article = await Post.findOne({ slugUrl: slug })
       .populate({
         path: "comments.author",
         select: { _id: 1, avatar: 1, name: 1 },
       })
-      .select({ _id: 0, comments: 1 });
-    if (!article) {
-      throw new Error("No document found");
+      .select({
+        _id: 0,
+        comments: 1,
+      });
+    if (!article || _.isEmpty(article.comments)) {
+      res.status(200).json({
+        error: "No Document Found" || "something goes wrong",
+      });
+      return;
     }
     res.status(200).json({
       data: article,

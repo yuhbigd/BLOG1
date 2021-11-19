@@ -1,0 +1,14 @@
+.thumbnailImage {
+  width: 105%;
+  max-height: 500px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 2em;
+}
+.title {
+  text-align: justify;
+  margin: 1em;
+  color: black;
+  word-break: break-all;
+}

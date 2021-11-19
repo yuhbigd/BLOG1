@@ -9,6 +9,7 @@ function Avatar(props) {
   const avatarLink = reduxContext.avatar;
   let nameWords = reduxContext.name
     .split(" ")
+    .slice(0, 2)
     .map((word) => {
       return word.charAt(0);
     })

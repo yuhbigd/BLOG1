@@ -42,6 +42,10 @@ const postSchema = new mongoose.Schema({
     {
       text: String,
       author: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+      createAt: {
+        type: Date,
+        index: true,
+      },
     },
   ],
 });

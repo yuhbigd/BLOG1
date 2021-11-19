@@ -98,6 +98,22 @@ function CreatePost(props) {
       }
     }
   }, [sendArticleStatus, articleData, sendArticleError]);
+
+  function resizeTextArea() {
+    titleRef.current.style.height = "auto";
+    titleRef.current.style.height = titleRef.current.scrollHeight + "px";
+    if (titleRef.current.value.length > 150) {
+      titleRef.current.value = titleRef.current.value.substring(0, 151);
+    }
+  }
+  useEffect(() => {
+    window.onresize = function (event) {
+      resizeTextArea();
+    };
+    return () => {
+      window.onresize = () => {};
+    };
+  }, []);
   return (
     <div className={classes.container}>
       {(sendDraftStatus === "pending" || sendArticleStatus === "pending") && (
@@ -110,11 +126,7 @@ function CreatePost(props) {
         rows="1"
         ref={titleRef}
         onInput={(event) => {
-          titleRef.current.style.height = "auto";
-          titleRef.current.style.height = titleRef.current.scrollHeight + "px";
-          if (titleRef.current.value.length > 150) {
-            titleRef.current.value = titleRef.current.value.substring(0, 151);
-          }
+          resizeTextArea();
         }}
       ></textarea>
       {props.draft ? (

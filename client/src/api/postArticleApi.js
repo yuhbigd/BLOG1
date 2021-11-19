@@ -119,7 +119,7 @@ export async function getSinglePost(slug) {
   }
   return data;
 }
-export async function getMyPosts({
+export async function getUserPosts({
   userId,
   pageNum = 1,
   numPerPage = 12,
@@ -145,7 +145,7 @@ export async function getMyPosts({
   }
   return data;
 }
-export async function getNumberOfMyPosts({ userId, searchString }) {
+export async function getNumberOfUserPosts({ userId, searchString }) {
   const serverDomain = process.env.REACT_APP_BASE_URL;
   if (!searchString) {
     searchString = "";

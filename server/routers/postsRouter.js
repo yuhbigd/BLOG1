@@ -2,7 +2,7 @@ const { Router } = require("express");
 const posts = require("../controllers/postsController");
 const { checkBotMiddleware } = require("../middlewares/checkBotMiddleware");
 const multer = require("multer");
-const { checkUser } = require("../middlewares/authMiddleware");
+const { checkUser, checkAnonymous } = require("../middlewares/authMiddleware");
 const router = Router();
 const imageUpload = multer({
   dest: "public/uploads/posts/images", // co the co loi cho nay
@@ -36,5 +36,9 @@ router.delete("/:slug", [checkUser], posts.post_delete);
 router.get("/", posts.get_all_post);
 router.get("/:slug", posts.get_post);
 router.get("/:slug/comments", posts.comments_get);
-router.post("/:slug/comments", [checkBotMiddleware], posts.comment_post);
+router.post(
+  "/:slug/comments",
+  [checkBotMiddleware, checkAnonymous],
+  posts.comment_post,
+);
 module.exports = { router };

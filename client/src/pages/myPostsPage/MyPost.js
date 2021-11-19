@@ -5,8 +5,8 @@ import { FaSearch } from "react-icons/fa";
 import SelectList from "../../components/post-component/SelectList";
 import {
   deleteArticle,
-  getMyPosts,
-  getNumberOfMyPosts,
+  getUserPosts,
+  getNumberOfUserPosts,
 } from "../../api/postArticleApi";
 import { useMountedState } from "react-use";
 import { useUpdateEffect } from "react-use";
@@ -115,7 +115,7 @@ function MyPost(props) {
     status: getPostsStatus,
     data: allPostsFromServer,
     error: postsError,
-  } = useHttp(getMyPosts);
+  } = useHttp(getUserPosts);
   //delete post
   const {
     sendRequest: deletePostFromServer,
@@ -156,7 +156,7 @@ function MyPost(props) {
       //get and set number of post
       let number;
       try {
-        number = await getNumberOfMyPosts({
+        number = await getNumberOfUserPosts({
           userId,
           searchString: query.get("search"),
         });
@@ -217,7 +217,7 @@ function MyPost(props) {
       //get and set number of post
       let number;
       try {
-        number = await getNumberOfMyPosts({
+        number = await getNumberOfUserPosts({
           userId,
           searchString: query.get("search"),
         });

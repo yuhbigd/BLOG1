@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
-import { useLocation, useParams } from "react-router";
-
-function useQuery() {
-  const { search } = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
+import { useParams } from "react-router";
+import PostLayout from "../../components/view-post-component/PostLayout";
+import CommentSection from "../../components/view-post-component/CommentSection";
+import classes from "./Post.module.css";
 function Post() {
   const params = useParams();
-  // console.log(params.slugUrl);
-  return <div></div>;
+  return (
+    <div className={classes.container}>
+      <PostLayout />
+      <CommentSection slug={params.slugUrl} />
+    </div>
+  );
 }
 
 export default Post;

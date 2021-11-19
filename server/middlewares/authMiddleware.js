@@ -52,6 +52,53 @@ const checkUser = async (req, res, next) => {
   }
 };
 
+const checkAnonymous = async (req, res, next) => {
+  const token = req.cookies.token;
+  if (token) {
+    try {
+      const { user } = await jwt.verify(token, process.env.SECRET_KEY);
+      if (user) {
+        req.user = await User.findOne({ _id: user._id });
+        next();
+      } else {
+        res.clearCookie("token");
+        res.status(401).json({
+          error: "invalid token",
+        });
+      }
+    } catch (err) {
+      res.status(400).json({
+        error: err.message,
+      });
+    }
+  } else {
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+      const newToken = await getNewToken(refreshToken);
+      if (newToken.token && newToken.refreshToken) {
+        res.cookie("token", newToken.token, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 10,
+        });
+        res.cookie("refreshToken", newToken.refreshToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 3,
+        });
+        req.user = newToken.user;
+        next();
+      } else {
+        res.clearCookie("refreshToken");
+        res.status(401).json({
+          error: "invalid refreshToken",
+        });
+      }
+    } else {
+      req.user = null;
+      next();
+    }
+  }
+};
+
 // checking refreshToken, if it is true, creating new Token and refresh Token
 async function getNewToken(refreshToken) {
   let userId = -1;
@@ -89,4 +136,4 @@ async function getNewToken(refreshToken) {
   };
 }
 
-module.exports = { checkUser };
+module.exports = { checkUser, checkAnonymous };
