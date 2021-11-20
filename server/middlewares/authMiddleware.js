@@ -31,10 +31,14 @@ const checkUser = async (req, res, next) => {
         res.cookie("token", newToken.token, {
           httpOnly: true,
           maxAge: 1000 * 60 * 10,
+          secure: true,
+          sameSite: "none",
         });
         res.cookie("refreshToken", newToken.refreshToken, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 3,
+          secure: true,
+          sameSite: "none",
         });
         req.user = newToken.user;
         next();
@@ -79,10 +83,14 @@ const checkAnonymous = async (req, res, next) => {
         res.cookie("token", newToken.token, {
           httpOnly: true,
           maxAge: 1000 * 60 * 10,
+          secure: true,
+          sameSite: "none",
         });
         res.cookie("refreshToken", newToken.refreshToken, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 3,
+          secure: true,
+          sameSite: "none",
         });
         req.user = newToken.user;
         next();

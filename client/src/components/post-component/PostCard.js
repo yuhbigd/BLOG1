@@ -16,7 +16,7 @@ let nameWords = (name) => {
 };
 
 function PostCard(props) {
-  const now = moment().utc(7);
+  const now = moment();
   const history = useHistory();
   return (
     <Link className={classes["card"]} to={"/posts/" + props.item.slugUrl}>

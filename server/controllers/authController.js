@@ -38,10 +38,17 @@ login_get = async (req, res) => {
     }
 
     const { token, refreshToken } = await createToken(user);
-    res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60,
+      secure: true,
+      sameSite: "none",
+    });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({
@@ -60,12 +67,19 @@ signup_post = async (req, res) => {
       email,
       password,
       name,
-    },);
+    });
     const { token, refreshToken } = await createToken(user);
-    res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60,
+      secure: true,
+      sameSite: "none",
+    });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: true,
+      sameSite: "none",
     });
     res.status(201).json({
       user: _.pick(user, ["_id", "email", "name", "isAdmin", "avatar"]),
@@ -92,10 +106,17 @@ login_post = async (req, res) => {
     const user = await User.login(email, password);
 
     const { token, refreshToken } = await createToken(user);
-    res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60,
+      secure: true,
+      sameSite: "none",
+    });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({
