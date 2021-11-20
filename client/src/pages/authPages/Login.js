@@ -29,7 +29,7 @@ function Login(props) {
     event.preventDefault();
     const tokenCaptcha = await window.getReCaptchaToken();
     const emailValue = email.current.value;
-    const passwordValue = password.current.value;
+    const passwordValue = password.current.value.trim();
 
     const checkEmail = isEmail(emailValue);
     if (!checkEmail) {
