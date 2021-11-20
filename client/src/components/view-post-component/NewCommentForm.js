@@ -51,6 +51,7 @@ function NewCommentForm(props) {
     if (isMount()) {
       if (sendCommentStatus === "completed" && commentFromServer) {
         isPosting.current = false;
+        props.prependComments(commentFromServer.data);
       } else if (sendCommentStatus === "completed" && !commentFromServer) {
         setError(
           <Modal

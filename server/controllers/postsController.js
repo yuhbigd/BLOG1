@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const User = require("../models/userModel");
 require("dotenv").config();
 const slugify = require("slugify");
 const CronJob = require("cron").CronJob;
@@ -330,6 +331,9 @@ async function comment_post(req, res) {
   try {
     const slug = req.params.slug;
     let userId;
+    let now = new Date(
+      new Date().getTime() - new Date().getTimezoneOffset() * 60000,
+    );
     if (req.user) {
       userId = req.user._id;
     } else {
@@ -347,9 +351,7 @@ async function comment_post(req, res) {
               {
                 text: req.body.data.text,
                 author: userId,
-                createAt: new Date(
-                  new Date().getTime() - new Date().getTimezoneOffset() * 60000,
-                ),
+                createAt: now,
               },
             ],
             $position: 0,
@@ -361,8 +363,19 @@ async function comment_post(req, res) {
     if (!article) {
       throw new Error("No document found");
     }
+    let author = await User.findOne({
+      _id: userId,
+    });
     res.status(200).json({
-      message: "Done",
+      data: {
+        text: req.body.data.text,
+        createAt: now,
+        author: {
+          _id: author._id,
+          avatar: author.avatar,
+          name: author.name,
+        },
+      },
     });
   } catch (error) {
     res.status(404).json({

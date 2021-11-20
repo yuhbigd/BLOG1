@@ -50,6 +50,11 @@ function CommentSection(props) {
       setComments({ data: data });
     }
   }
+  function prependComments(item) {
+    let newArray = comments.data.slice();
+    newArray.unshift(item);
+    setComments({ data: newArray });
+  }
   useEffect(() => {
     if (isMount()) {
       if (getCommentsStatus === "completed" && commentsFromServer) {
@@ -60,7 +65,7 @@ function CommentSection(props) {
   }, [getCommentsStatus, commentsFromServer]);
   return (
     <div>
-      <NewCommentForm slug={props.slug} />
+      <NewCommentForm slug={props.slug} prependComments={prependComments} />
       <div className={classes["comments-container"]}>
         {comments.data.length > 0 &&
           comments.data.map((item) => {
