@@ -35,8 +35,8 @@ function Signup(props) {
     const tokenCaptcha = await window.getReCaptchaToken();
     await sendRequest({
       email: email.current.value,
-      password: passwordValue,
-      name: name.current.value,
+      password: passwordValue.trim(),
+      name: name.current.value.trim(),
       tokenCaptcha,
     });
   }
